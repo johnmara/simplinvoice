@@ -1,0 +1,6 @@
+image: maven:latest
+
+build:
+  stage: build
+  script:
+    - mvn clean package
