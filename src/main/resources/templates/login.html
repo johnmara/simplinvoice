@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Log in</title>
+  <title th:text="#{app.title} + ' | ' + #{login.title}"></title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -17,7 +17,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a th:href="@{/}" th:text="#{application.title}"></a>
+    <a th:href="@{/}" th:text="#{app.title}"></a>
   </div>
   <!-- /.login-logo -->
   <div class="card">
@@ -25,14 +25,14 @@
       <p class="login-box-msg" th:text="#{login.description}"></p>
 
       <div th:if="${param.error}">
-        Invalid username and password.
+        [[#{messages.invalid.login}]]
       </div>
-      <div th:if="${param.logout}">
-        You have been logged out.
+      <div th:if="${param.logout}" th:inline="text">
+        [[#{messages.logout}]]
       </div>
       <form th:action="@{/login}" method="post">
         <div class="input-group mb-3">
-          <input type="text" class="form-control" name="username" placeholder="Username">
+          <input type="text" class="form-control" name="username" th:placeholder="#{email.placeholder}">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
@@ -40,7 +40,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" class="form-control" name="password" placeholder="Password">
+          <input type="password" class="form-control" name="password" th:placeholder="#{password.placeholder}">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -55,11 +55,8 @@
         </div>
       </form>
 
-      <p class="mb-1">
-        <a href="forgot-password.html">I forgot my password</a>
-      </p>
       <p class="mb-0">
-        <a th:href="@{/user/register}" class="text-center">Register a new membership</a>
+        <a th:href="@{/user/register}" class="text-center" th:text="#{register.new.user}">Register a new membership</a>
       </p>
     </div>
     <!-- /.login-card-body -->
