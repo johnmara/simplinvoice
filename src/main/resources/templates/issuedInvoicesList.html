@@ -4,7 +4,7 @@
     <title th:text="#{issued.invoices.title} + ' | ' + #{dashboard.title}"></title>
   </th:block>
 
-  <div th:fragment="container">
+  <th:block th:fragment="container">
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -920,7 +920,7 @@
     </div>
     <!-- /.content-wrapper -->
 
-  </div>
+  </th:block>
 
   <script>
     $(function () {
