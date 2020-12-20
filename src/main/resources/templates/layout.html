@@ -17,6 +17,8 @@
     <link rel="stylesheet" th:href="@{/plugins/datatables-buttons/css/buttons.bootstrap4.min.css}">
     <!-- Theme style -->
     <link rel="stylesheet" th:href="@{/css/adminlte.min.css}">
+    <!-- Custom -->
+    <link rel="stylesheet" th:href="@{/css/custom.css}">
 </head>
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -106,8 +108,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a th:href="@{/products/list}" class="nav-link"
-                               th:classappend="${view.equals('productsList') ? 'active' : ''}">
+                            <a th:href="@{/product/list/paginated}" class="nav-link"
+                               th:classappend="${view.equals('productsListPaginated') ? 'active' : ''}">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p th:text="#{products.list.title}"></p>
                             </a>
@@ -174,11 +176,7 @@
     <script th:src="@{/plugins/datatables-buttons/js/dataTables.buttons.min.js}"></script>
     <script th:src="@{/plugins/datatables-buttons/js/buttons.bootstrap4.min.js}"></script>
     <script th:src="@{/plugins/jszip/jszip.min.js}"></script>
-    <script th:src="@{/plugins/pdfmake/pdfmake.min.js}"></script>
-    <script th:src="@{/plugins/pdfmake/vfs_fonts.js}"></script>
     <script th:src="@{/plugins/datatables-buttons/js/buttons.html5.min.js}"></script>
-    <script th:src="@{/plugins/datatables-buttons/js/buttons.print.min.js}"></script>
-    <script th:src="@{/plugins/datatables-buttons/js/buttons.colVis.min.js}"></script>
     <!-- AdminLTE App -->
     <script th:src="@{/js/adminlte.min.js}"></script>
     <!-- Page Custom Script -->

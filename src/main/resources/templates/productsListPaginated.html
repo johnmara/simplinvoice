@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <title th:fragment="title" th:text="#{app.title} + ' | ' + #{products.list.title}"></title>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" th:fragment="container">
+
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 th:text="#{products.list.title}">DataTables</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active">DataTables</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title" th:text="#{products.list.description}"></h3>
+
+                                <div class="card-tools">
+                                    <div class="input-group input-group-sm" style="width: 150px;">
+                                        <form th:action="@{/product/list/paginated}" method="get" th:object="${pageListRequest}">
+                                            <input type="text" th:field="*{name}" class="form-control" placeholder="Name">
+                                            <input type="text" th:field="*{category}" class="form-control" placeholder="Category">
+
+                                            <div class="input-group-append">
+                                                <button type="submit" class="btn btn-default">
+                                                    <i class="fas fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <table id="productsList" class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr th:with="path='/product/list/paginated?'">
+                                            <th>ID</th>
+                                            <th th:replace="/fragments/table :: columnHeader(path=${path},
+                                                                                pageListRequest = ${pageListRequest},
+                                                                                message = #{products.column.name},
+                                                                                property = 'name')"></th>
+                                            <th th:replace="/fragments/table :: columnHeader(path=${path},
+                                                                                pageListRequest = ${pageListRequest},
+                                                                                message = #{products.column.category},
+                                                                                property = 'category')"></th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="product: ${pageListRequest.content}">
+                                            <td th:text="${product.id}">Id</td>
+                                            <td th:text="${product.name}">Name</td>
+                                            <td th:text="${product.category}">Category</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                            <div th:replace="/fragments/table :: tableFooter(path='/product/list/paginated?', pageListRequest = ${pageListRequest})"></div>
+                        </div>
+                        <!-- /.card -->
+
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+
+    </div>
+    <!-- /.content-wrapper -->
+
+    <th:block th:fragment="pageCustomScript">
+    </th:block>
+
+
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div class="card-footer clearfix" th:if="${pageListRequest.totalPages > 0}" th:fragment="tableFooter">
+    <p class="float-left" th:text="#{table.total(${pageListRequest.totalElements})}"></p>
+    <ul class="pagination pagination-sm m-0 float-right">
+        <li class="page-item">
+            <a class="page-link" th:href="@{${path + pageListRequest.toQueryString({'page'})}(page=1)}">&laquo;</a>
+        </li>
+        <li class="page-item" th:each="pageNumber : ${pageNumbers}">
+            <a class="page-link"
+               th:href="@{${path + pageListRequest.toQueryString({'page'})}(page=${pageNumber})}"
+               th:classappend="${pageNumber==pageListRequest.page + 1} ? active"
+               th:text="${pageNumber}">1</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link"
+               th:href="@{${path + pageListRequest.toQueryString({'page'})}(page=${pageListRequest.totalPages})}">&raquo;</a>
+        </li>
+    </ul>
+</div>
+
+<th th:fragment="columnHeader(path, pageListRequest, message, property)">
+    <a th:href="@{${path + pageListRequest.toQueryString({'sortBy', 'asc', 'page'})}(page=1, sortBy=${property}, asc=${pageListRequest.asc == 'ASC' ? 'DESC' : 'ASC'})}" th:text="${message}"></a>
+    <i th:if="${pageListRequest.sortBy == property && pageListRequest.asc == 'DESC'}" class="fas fa-arrow-down"></i>
+    <i th:if="${pageListRequest.sortBy == property && pageListRequest.asc == 'ASC'}" class="fas fa-arrow-up"></i>
+</th>
+
+
+</html>
