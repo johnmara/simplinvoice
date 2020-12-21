@@ -4,21 +4,24 @@ import gr.aueb.invoicesmanagement.validator.PasswordMatches;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @PasswordMatches
 public class UserDto {
     @NotNull
-    @NotEmpty
+    @Size(min = 3, message = "{register.fullname.size}")
     private String fullName;
 
     @NotNull
     @NotEmpty
     private String email;
 
+    @NotNull
+    @Size(min = 1)
+    private String password;
 
     @NotNull
-    @NotEmpty
-    private String password;
+    @Size(min = 1)
     private String matchingPassword;
 
     public String getFullName() {

@@ -25,22 +25,31 @@
   <div class="card">
     <div class="card-body register-card-body">
       <p class="login-box-msg" th:text="#{register.new.user.message}">Register a new membership</p>
-
+      <div class="callout callout-danger" th:if="${message}">
+        <h5 th:text="${message}"></h5>
+      </div>
       <form th:action="@{/user/register}" th:object="${user}" method="post">
         <div class="input-group mb-3">
-          <input type="text" class="form-control" th:placeholder="#{register.full.name.placeholder}" th:field="*{fullName}">
-          <p th:each="error: ${#fields.errors('fullName')}"
-             th:text="${error}">Validation error</p>
+          <input id="fullNameInput" type="text" class="form-control"
+                 th:classappend="${not #lists.isEmpty(#fields.errors('fullName')) ? 'is-invalid' : ''}"
+                 th:placeholder="#{register.full.name.placeholder}" th:field="*{fullName}">
+          <div class="invalid-feedback order-last " th:each="error: ${#fields.errors('fullName')}" th:inline="text">
+            [[${error}]]
+          </div>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-user"></span>
             </div>
           </div>
+
         </div>
         <div class="input-group mb-3">
-          <input type="email" class="form-control" th:placeholder="#{email.placeholder}" th:field="*{email}">
-          <p th:each="error : ${#fields.errors('email')}"
-             th:text="${error}">Validation error</p>
+          <input type="email" class="form-control"
+                 th:classappend="${not #lists.isEmpty(#fields.errors('email')) ? 'is-invalid' : ''}"
+                 th:placeholder="#{email.placeholder}" th:field="*{email}">
+          <div class="invalid-feedback order-last " th:each="error: ${#fields.errors('email')}" th:inline="text">
+            [[${error}]]
+          </div>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
@@ -48,9 +57,12 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" class="form-control" th:placeholder="#{register.password.placeholder}" th:field="*{password}">
-          <p th:each="error : ${#fields.errors('password')}"
-             th:text="${error}">Validation error</p>
+          <input type="password" class="form-control"
+                 th:classappend="${not #lists.isEmpty(#fields.errors('password')) ? 'is-invalid' : ''}"
+                 th:placeholder="#{register.password.placeholder}" th:field="*{password}">
+          <div class="invalid-feedback order-last " th:each="error: ${#fields.errors('password')}" th:inline="text">
+            [[${error}]]
+          </div>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -58,7 +70,12 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" class="form-control" th:placeholder="#{register.retype.password.placeholder}" th:field="*{matchingPassword}">
+          <input type="password" class="form-control"
+                 th:classappend="${not #lists.isEmpty(#fields.errors('matchingPassword')) ? 'is-invalid' : ''}"
+                 th:placeholder="#{register.retype.password.placeholder}" th:field="*{matchingPassword}">
+          <div class="invalid-feedback order-last " th:each="error: ${#fields.errors('matchingPassword')}" th:inline="text">
+            [[${error}]]
+          </div>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>

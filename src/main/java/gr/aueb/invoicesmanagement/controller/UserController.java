@@ -40,20 +40,22 @@ public class UserController {
 
     @PostMapping("/register")
     public ModelAndView registerUserAccount(
-            @ModelAttribute("user") @Valid UserDto userDto,
-            HttpServletRequest request, Errors errors) {
+            @ModelAttribute("user") @Valid UserDto userDto, Errors errors, HttpServletRequest request) {
+
+        if(errors.hasErrors())
+            return new ModelAndView("register");
 
         try {
             final User registered = userService.registerNewUserAccount(userDto);
         } catch (final EmailExistsException uaeEx) {
-            ModelAndView mav = new ModelAndView("registration", "user", userDto);
-            String errMessage = messages.getMessage("message.regError", null, request.getLocale());
+            ModelAndView mav = new ModelAndView("register", "user", userDto);
+            String errMessage = messages.getMessage("messages.email.exists", null, request.getLocale());
             mav.addObject("message", errMessage);
             return mav;
         } catch (final RuntimeException ex) {
             return new ModelAndView("emailError", "user", userDto);
         }
-        return new ModelAndView("successRegister", "user", userDto);
+        return new ModelAndView("login");
     }
 
 }

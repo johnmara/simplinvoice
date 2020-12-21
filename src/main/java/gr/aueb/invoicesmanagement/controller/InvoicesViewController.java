@@ -14,4 +14,9 @@ public class InvoicesViewController extends AbstractViewController {
         return getModelAndView("issuedInvoicesList", model);
     }
 
+    @GetMapping(value = "/create")
+    String getCreateInvoicePage(final Model model) {
+        return getModelAndView("invoice", model);
+    }
+
 }
