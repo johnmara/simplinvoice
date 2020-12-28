@@ -8,10 +8,10 @@
 		<version>2.4.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>gr.aueb</groupId>
-	<artifactId>invoices-management</artifactId>
+	<groupId>gr.aueb.dmst</groupId>
+	<artifactId>simplinvoice</artifactId>
 	<version>1.0.0</version>
-	<name>invoices-management</name>
+	<name>simplinvoice</name>
 	<description>Application to handle e-invoicing and send invoices to aade</description>
 
 	<properties>
