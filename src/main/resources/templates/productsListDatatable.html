@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <title th:fragment="title" th:text="#{app.title} + ' | ' + #{products.list.title}"></title>
+    <title th:fragment="title" th:text="#{app.title} + ' | ' + #{deprecated.products.list.title}"></title>
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper" th:fragment="container">
@@ -10,7 +10,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 th:text="#{products.list.title}">DataTables</h1>
+                        <h1 th:text="#{deprecated.products.list.title}">DataTables</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -29,7 +29,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title" th:text="#{products.list.description}"></h3>
+                                <h3 class="card-title" th:text="#{deprecated.products.list.description}"></h3>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
@@ -41,9 +41,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="product, iStat: ${productsList}">
-                                            <td th:text="${product.id}">Id</td>
-                                            <td th:text="${product.name}">Name</td>
+                                        <tr th:each="deprecatedProduct, iStat: ${productsList}">
+                                            <td th:text="${deprecatedProduct.id}">Id</td>
+                                            <td th:text="${deprecatedProduct.name}">Name</td>
                                         </tr>
                                     </tbody>
                                     <tfoot>

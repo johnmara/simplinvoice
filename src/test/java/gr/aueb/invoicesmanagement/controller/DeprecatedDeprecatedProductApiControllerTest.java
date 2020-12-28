@@ -1,8 +1,8 @@
 package gr.aueb.invoicesmanagement.controller;
 
 import gr.aueb.invoicesmanagement.InvoicesManagementApplication;
-import gr.aueb.invoicesmanagement.model.Customer;
-import gr.aueb.invoicesmanagement.service.CustomerService;
+import gr.aueb.invoicesmanagement.model.DeprecatedProduct;
+import gr.aueb.invoicesmanagement.service.DeprecatedProductService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,33 +19,32 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-//@WebMvcTest(value = CustomerApiController.class)
+//@WebMvcTest(value = ProductApiController.class)
 @SpringBootTest(
         classes = InvoicesManagementApplication.class
 )
 @AutoConfigureMockMvc
 @TestPropertySource(
         locations = "classpath:application-integrationtest.properties")
-public class CustomerApiControllerTest {
+public class DeprecatedDeprecatedProductApiControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
     @MockBean
-    private CustomerService service;
+    private DeprecatedProductService service;
 
     @WithMockUser(value = "spring")
     @Test
-    public void givenId_whenGetCustomer_thenReturnCustomer() throws Exception {
+    public void givenId_whenGetProduct_thenReturnProduct() throws Exception {
 
-        Customer customer = new Customer("John", "Mara");
+        DeprecatedProduct deprecatedProduct = new DeprecatedProduct("Ball");
 
-        given(service.getCustomerById(1L)).willReturn(customer);
+        given(service.getProductById(1L)).willReturn(deprecatedProduct);
 
-        mvc.perform(get("/api/customer/1"))
+        mvc.perform(get("/api/deprecated/product/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("firstName", is(customer.getFirstName())))
-                .andExpect(jsonPath("lastName", is(customer.getLastName())));
+                .andExpect(jsonPath("name", is(deprecatedProduct.getName())));
     }
 
 }

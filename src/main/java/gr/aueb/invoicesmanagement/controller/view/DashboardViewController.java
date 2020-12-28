@@ -1,4 +1,4 @@
-package gr.aueb.invoicesmanagement.controller;
+package gr.aueb.invoicesmanagement.controller.view;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

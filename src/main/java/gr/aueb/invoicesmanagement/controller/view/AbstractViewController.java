@@ -1,4 +1,4 @@
-package gr.aueb.invoicesmanagement.controller;
+package gr.aueb.invoicesmanagement.controller.view;
 
 import gr.aueb.invoicesmanagement.model.request.PageListRequest;
 import org.springframework.data.domain.Page;

@@ -2,7 +2,7 @@ package gr.aueb.invoicesmanagement.integration.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gr.aueb.invoicesmanagement.InvoicesManagementApplication;
-import gr.aueb.invoicesmanagement.model.Customer;
+import gr.aueb.invoicesmanagement.model.DeprecatedProduct;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -27,31 +27,30 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestPropertySource(
 		locations = "classpath:application-integrationtest.properties")
-class CustomerApiIntegrationTest {
+class DeprecatedProductApiIntegrationTest {
 
 	@Autowired
 	private MockMvc mvc;
 
 	@WithMockUser(value = "spring")
 	@Test
-	public void givenId_whenGetCustomer_thenReturnCustomer() throws Exception {
-		Customer customer = new Customer("John", "Mara");
+	public void givenId_whenGetProduct_thenReturnProduct() throws Exception {
+		DeprecatedProduct deprecatedProduct = new DeprecatedProduct("Ball");
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		HttpHeaders httpHeaders = new HttpHeaders();
 
-		MockHttpServletResponse response = mvc.perform(post("/api/customer/add")
+		MockHttpServletResponse response = mvc.perform(post("/api/deprecated/product/add")
 					.contentType(MediaType.APPLICATION_JSON)
-					.content(objectMapper.writeValueAsString(customer)))
+					.content(objectMapper.writeValueAsString(deprecatedProduct)))
 				.andExpect(status().isOk()).andReturn().getResponse();
 
 		assertNotNull(response.getContentAsString());
 		String generatedId = response.getContentAsString();
 
-		mvc.perform(get("/api/customer/" + generatedId).headers(httpHeaders))
+		mvc.perform(get("/api/deprecated/product/" + generatedId).headers(httpHeaders))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("firstName", is(customer.getFirstName())))
-				.andExpect(jsonPath("lastName", is(customer.getLastName())));
+				.andExpect(jsonPath("name", is(deprecatedProduct.getName())));
 	}
 
 }

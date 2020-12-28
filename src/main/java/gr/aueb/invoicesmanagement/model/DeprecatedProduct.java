@@ -6,7 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Product {
+public class DeprecatedProduct {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -14,9 +14,9 @@ public class Product {
     private String name;
     private String category;
 
-    protected Product() {}
+    protected DeprecatedProduct() {}
 
-    public Product(String name) {
+    public DeprecatedProduct(String name) {
         this.name = name;
     }
 

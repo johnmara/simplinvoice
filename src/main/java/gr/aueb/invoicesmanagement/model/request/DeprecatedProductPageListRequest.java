@@ -1,8 +1,8 @@
 package gr.aueb.invoicesmanagement.model.request;
 
-import gr.aueb.invoicesmanagement.model.Product;
+import gr.aueb.invoicesmanagement.model.DeprecatedProduct;
 
-public class ProductPageListRequest extends PageListRequest<Product> {
+public class DeprecatedProductPageListRequest extends PageListRequest<DeprecatedProduct> {
 
     private String name;
     private String category;

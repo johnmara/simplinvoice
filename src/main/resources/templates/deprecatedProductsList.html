@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <title th:fragment="title" th:text="#{app.title} + ' | ' + #{products.list.title}"></title>
+    <title th:fragment="title" th:text="#{app.title} + ' | ' + #{deprecated.products.list.title}"></title>
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper" th:fragment="container">
@@ -10,7 +10,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 th:text="#{products.list.title}">Products</h1>
+                        <h1 th:text="#{deprecated.products.list.title}">Products</h1>
                     </div>
                 </div>
             </div><!-- /.container-fluid -->
@@ -23,10 +23,10 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title" th:text="#{products.list.description}"></h3>
+                                <h3 class="card-title" th:text="#{deprecated.products.list.description}"></h3>
 
                                 <div class="card-tools">
-                                    <form class="input-group input-group-sm" th:action="@{/product/list/paginated}" method="get" th:object="${pageListRequest}">
+                                    <form class="input-group input-group-sm" th:action="@{/deprecated/product/list/paginated}" method="get" th:object="${pageListRequest}">
                                         <input type="text" th:field="*{name}" class="form-control" placeholder="Name">
                                         <input type="text" th:field="*{category}" class="form-control" placeholder="Category">
 
@@ -42,29 +42,29 @@
                             <div class="card-body">
                                 <table id="productsList" class="table table-bordered table-hover">
                                     <thead>
-                                        <tr th:with="path='/product/list/paginated?'">
+                                        <tr th:with="path='/deprecated/product/list/paginated?'">
                                             <th>ID</th>
                                             <th th:replace="fragments/table :: columnHeader(path=${path},
                                                                                 pageListRequest = ${pageListRequest},
-                                                                                message = #{products.column.name},
+                                                                                message = #{deprecated.products.column.name},
                                                                                 property = 'name')"></th>
                                             <th th:replace="fragments/table :: columnHeader(path=${path},
                                                                                 pageListRequest = ${pageListRequest},
-                                                                                message = #{products.column.category},
+                                                                                message = #{deprecated.products.column.category},
                                                                                 property = 'category')"></th>
                                        </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="product: ${pageListRequest.content}">
-                                            <td th:text="${product.id}">Id</td>
-                                            <td th:text="${product.name}">Name</td>
-                                            <td th:text="${product.category}">Category</td>
+                                        <tr th:each="deprecatedProduct: ${pageListRequest.content}">
+                                            <td th:text="${deprecatedProduct.id}">Id</td>
+                                            <td th:text="${deprecatedProduct.name}">Name</td>
+                                            <td th:text="${deprecatedProduct.category}">Category</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <!-- /.card-body -->
-                            <div th:replace="fragments/table :: tableFooter(path='/product/list/paginated?', pageListRequest = ${pageListRequest})"></div>
+                            <div th:replace="fragments/table :: tableFooter(path='/deprecated/product/list/paginated?', pageListRequest = ${pageListRequest})"></div>
                         </div>
                         <!-- /.card -->
 

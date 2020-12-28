@@ -1,4 +1,4 @@
-package gr.aueb.invoicesmanagement.controller;
+package gr.aueb.invoicesmanagement.controller.view;
 
 import gr.aueb.invoicesmanagement.dto.UserDto;
 import gr.aueb.invoicesmanagement.model.User;
@@ -22,7 +22,7 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("user")
-public class UserController {
+public class UserViewController {
 
     @Autowired
     UserService userService;

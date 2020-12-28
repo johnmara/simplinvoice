@@ -1,6 +1,6 @@
 package gr.aueb.invoicesmanagement.dao;
 
-import gr.aueb.invoicesmanagement.model.Product;
+import gr.aueb.invoicesmanagement.model.DeprecatedProduct;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -9,8 +9,10 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductRepository extends PagingAndSortingRepository<Product, Long>, JpaSpecificationExecutor<Product> {
+public interface DeprecatedProductRepository extends PagingAndSortingRepository<DeprecatedProduct, Long>, JpaSpecificationExecutor<DeprecatedProduct> {
 
-    Page<Product> findAll(Specification<Product> spec, Pageable pageable);
+    Page<DeprecatedProduct> findAll(Specification<DeprecatedProduct> spec, Pageable pageable);
+
+    DeprecatedProduct findById(long id);
 
 }
