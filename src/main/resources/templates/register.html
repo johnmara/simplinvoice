@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" th:href="@{/img/favicon.ico}" type="image/x-icon">
+  <link rel="icon" th:href="@{/img/favicon.ico}" type="image/x-icon">
+  <title th:text="#{app.title} + ' | ' + #{register.title}"></title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" th:href="@{/plugins/fontawesome-free/css/all.min.css}">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" th:href="@{/plugins/icheck-bootstrap/icheck-bootstrap.min.css}">
+  <!-- Theme style -->
+  <link rel="stylesheet" th:href="@{/css/adminlte.min.css}">
+</head>
+<body class="hold-transition register-page">
+<div class="register-box">
+  <div class="register-logo">
+    <a th:href="@{/}" th:text="#{app.title}"></a>
+  </div>
+
+  <div class="card">
+    <div class="card-body register-card-body">
+      <p class="login-box-msg" th:text="#{register.new.user.message}">Register a new membership</p>
+      <div class="callout callout-danger" th:if="${message}">
+        <h5 th:text="${message}"></h5>
+      </div>
+      <form th:action="@{/user/register}" th:object="${user}" method="post">
+        <div class="input-group mb-3">
+          <input id="fullNameInput" type="text" class="form-control"
+                 th:classappend="${not #lists.isEmpty(#fields.errors('fullName')) ? 'is-invalid' : ''}"
+                 th:placeholder="#{register.full.name.placeholder}" th:field="*{fullName}">
+          <div class="invalid-feedback order-last " th:each="error: ${#fields.errors('fullName')}" th:inline="text">
+            [[${error}]]
+          </div>
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-user"></span>
+            </div>
+          </div>
+
+        </div>
+        <div class="input-group mb-3">
+          <input type="email" class="form-control"
+                 th:classappend="${not #lists.isEmpty(#fields.errors('email')) ? 'is-invalid' : ''}"
+                 th:placeholder="#{email.placeholder}" th:field="*{email}">
+          <div class="invalid-feedback order-last " th:each="error: ${#fields.errors('email')}" th:inline="text">
+            [[${error}]]
+          </div>
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-envelope"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input type="password" class="form-control"
+                 th:classappend="${not #lists.isEmpty(#fields.errors('password')) ? 'is-invalid' : ''}"
+                 th:placeholder="#{register.password.placeholder}" th:field="*{password}">
+          <div class="invalid-feedback order-last " th:each="error: ${#fields.errors('password')}" th:inline="text">
+            [[${error}]]
+          </div>
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input type="password" class="form-control"
+                 th:classappend="${not #lists.isEmpty(#fields.errors('matchingPassword')) ? 'is-invalid' : ''}"
+                 th:placeholder="#{register.retype.password.placeholder}" th:field="*{matchingPassword}">
+          <div class="invalid-feedback order-last " th:each="error: ${#fields.errors('matchingPassword')}" th:inline="text">
+            [[${error}]]
+          </div>
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary btn-block" th:text="#{register.btn}">Register</button>
+          </div>
+          <!-- /.col -->
+        </div>
+      </form>
+
+      <a th:href="@{/login}" class="text-center" th:text="#{register.already.registered}">I already have a membership</a>
+    </div>
+    <!-- /.form-box -->
+  </div><!-- /.card -->
+</div>
+<!-- /.register-box -->
+
+<!-- jQuery -->
+<script th:src="@{/plugins/jquery/jquery.min.js}"></script>
+<!-- Bootstrap 4 -->
+<script th:src="@{/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/js/adminlte.min.js}"></script>
+</body>
+</html>

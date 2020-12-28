@@ -1,13 +1,13 @@
-package gr.aueb.invoicesmanagement;
+package gr.aueb.dmst.simplinvoice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class InvoicesManagementApplication {
+public class SimplinvoiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(InvoicesManagementApplication.class, args);
+		SpringApplication.run(SimplinvoiceApplication.class, args);
 	}
 
 }
