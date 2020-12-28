@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>gr.aueb</groupId>
 	<artifactId>invoices-management</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>invoices-management</name>
 	<description>Application to handle e-invoicing and send invoices to aade</description>
 

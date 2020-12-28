@@ -115,9 +115,36 @@
                             </a>
                         </li>
                         <li class="nav-item"
-                            th:classappend="${#lists.contains({'issuedInvoicesList'}, view) ? 'menu-open' : ''}">
+                            th:classappend="${#lists.contains({'suppliersList', 'customersList'}, view) ? 'menu-open' : ''}">
                             <a href="#" class="nav-link"
-                               th:classappend="${#lists.contains({'issuedInvoicesList'}, view) ? 'active' : ''}">
+                               th:classappend="${#lists.contains({'suppliersList', 'customersList'}, view) ? 'active' : ''}">
+                                <i class="nav-icon fas fa-people-arrows"></i>
+                                <p th:inline="text">
+                                    [[#{menu.traders}]]
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a th:href="@{/suppliers/list}" class="nav-link"
+                                       th:classappend="${view.equals('suppliersList') ? 'active' : ''}">
+                                        <i class="fas fa-warehouse nav-icon"></i>
+                                        <p th:text="#{menu.suppliers}">Suppliers</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a th:href="@{/customers/list}" class="nav-link"
+                                       th:classappend="${view.equals('customersList') ? 'active' : ''}">
+                                        <i class="fas fa-cash-register nav-icon"></i>
+                                        <p th:text="#{menu.customers}">Customers</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item"
+                            th:classappend="${#lists.contains({'issuedInvoicesList', 'receivedInvoicesList'}, view) ? 'menu-open' : ''}">
+                            <a href="#" class="nav-link"
+                               th:classappend="${#lists.contains({'issuedInvoicesList', 'receivedInvoicesList'}, view) ? 'active' : ''}">
                                 <i class="nav-icon fas fa-file-invoice"></i>
                                 <p th:inline="text">
                                     [[#{menu.invoicing}]]
@@ -137,6 +164,40 @@
                                        th:classappend="${view.equals('receivedInvoicesList') ? 'active' : ''}">
                                         <i class="far fa-arrow-alt-circle-left nav-icon"></i>
                                         <p th:text="#{menu.invoicing.received.invoices}">Received invoices</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item"
+                            th:classappend="${#lists.contains({'businessConfiguration', 'systemConfiguration', 'invoicingConfiguration'}, view) ? 'menu-open' : ''}">
+                            <a href="#" class="nav-link"
+                               th:classappend="${#lists.contains({'businessConfiguration', 'systemConfiguration', 'invoicingConfiguration'}, view) ? 'active' : ''}">
+                                <i class="nav-icon fas fa-sliders-h"></i>
+                                <p th:inline="text">
+                                    [[#{menu.configuration}]]
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a th:href="@{/configure/business}" class="nav-link"
+                                       th:classappend="${view.equals('businessConfiguration') ? 'active' : ''}">
+                                        <i class="fas fa-user-cog nav-icon"></i>
+                                        <p th:text="#{menu.configure.business}">Business</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a th:href="@{/configure/system}" class="nav-link"
+                                       th:classappend="${view.equals('systemConfiguration') ? 'active' : ''}">
+                                        <i class="fas fa-cogs nav-icon"></i>
+                                        <p th:text="#{menu.configure.system}">System</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a th:href="@{/configure/invoicing}" class="nav-link"
+                                       th:classappend="${view.equals('invoicingConfiguration') ? 'active' : ''}">
+                                        <i class="fas fa-file-invoice nav-icon"></i>
+                                        <p th:text="#{menu.configure.invoicing}">Invoicing</p>
                                     </a>
                                 </li>
                             </ul>

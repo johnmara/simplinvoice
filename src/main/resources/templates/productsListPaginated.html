@@ -44,11 +44,11 @@
                                     <thead>
                                         <tr th:with="path='/product/list/paginated?'">
                                             <th>ID</th>
-                                            <th th:replace="/fragments/table :: columnHeader(path=${path},
+                                            <th th:replace="fragments/table :: columnHeader(path=${path},
                                                                                 pageListRequest = ${pageListRequest},
                                                                                 message = #{products.column.name},
                                                                                 property = 'name')"></th>
-                                            <th th:replace="/fragments/table :: columnHeader(path=${path},
+                                            <th th:replace="fragments/table :: columnHeader(path=${path},
                                                                                 pageListRequest = ${pageListRequest},
                                                                                 message = #{products.column.category},
                                                                                 property = 'category')"></th>
@@ -64,7 +64,7 @@
                                 </table>
                             </div>
                             <!-- /.card-body -->
-                            <div th:replace="/fragments/table :: tableFooter(path='/product/list/paginated?', pageListRequest = ${pageListRequest})"></div>
+                            <div th:replace="fragments/table :: tableFooter(path='/product/list/paginated?', pageListRequest = ${pageListRequest})"></div>
                         </div>
                         <!-- /.card -->
 
