@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <title th:fragment="title" th:text="#{app.title} + ' | ' + #{configure.company.profile.title}"></title>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" th:fragment="container">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0" th:text="#{configure.company.profile.title}">Company Profile</h1>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div th:if="${successMessage}" class="alert alert-success alert-dismissible" th:inline="text">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+                            <h5><i class="icon fas fa-check"></i> [[#{success.message.title}]]</h5>
+                            [[${successMessage}]]
+                        </div>
+
+                        <!-- Horizontal Form -->
+                        <div class="card card-info">
+                            <!-- form start -->
+                            <form class="form-horizontal" th:action="@{/company/profile/update}" th:object="${companyProfile}" method="post">
+                                <input type="hidden" th:field="*{id}" id="companyProfileId">
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <label for="inputEmail" class="col-sm-2 col-form-label" th:text="#{email.field}">Email</label>
+                                        <div class="col-sm-10">
+                                            <input type="email" class="form-control" id="inputEmail" th:placeholder="#{email.placeholder}" th:field="*{email}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputCompanyName" class="col-sm-2 col-form-label" th:text="#{configure.company.profile.name}">Name</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="inputCompanyName"
+                                                   th:classappend="${not #lists.isEmpty(#fields.errors('companyName')) ? 'is-invalid' : ''}"
+                                                   th:placeholder="#{configure.company.profile.name}" th:field="*{companyName}">
+                                            <div class="invalid-feedback order-last " th:each="error: ${#fields.errors('companyName')}" th:inline="text">
+                                                [[${error}]]
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputAfm" class="col-sm-2 col-form-label" th:text="#{afm.field}">AFM</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="inputAfm" th:placeholder="#{afm.field}" th:field="*{afm}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputTaxOffice" class="col-sm-2 col-form-label" th:text="#{tax.office.field}">DOY</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="inputTaxOffice" th:placeholder="#{tax.office.field}" th:field="*{taxOffice}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputAddress" class="col-sm-2 col-form-label" th:text="#{address.field}">DOY</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="inputAddress" th:placeholder="#{address.field}" th:field="*{address}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPhoneNumber" class="col-sm-2 col-form-label" th:text="#{phone.number.field}">Phone Number</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="inputPhoneNumber" th:placeholder="#{phone.number.field}" th:field="*{phoneNumber}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-info float-right" th:text="#{save.btn}">Save</button>
+                                </div>
+                                <!-- /.card-footer -->
+                            </form>
+                        </div>
+                        <!-- /.card -->
+
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <th:block th:fragment="pageCustomScript"/>
+
+</html>
