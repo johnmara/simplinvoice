@@ -1,6 +1,7 @@
 package gr.aueb.dmst.simplinvoice.service;
 
 import gr.aueb.dmst.simplinvoice.dao.UserRepository;
+import gr.aueb.dmst.simplinvoice.model.CustomUserDetails;
 import gr.aueb.dmst.simplinvoice.model.Privilege;
 import gr.aueb.dmst.simplinvoice.model.Role;
 import gr.aueb.dmst.simplinvoice.model.User;
@@ -38,7 +39,7 @@ public class MyUserDetailsService implements UserDetailsService {
                 throw new UsernameNotFoundException("No user found with username: " + email);
             }
 
-            return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), user.isEnabled(), true, true, true, getAuthorities(user.getRoles()));
+            return new CustomUserDetails(user, user.getEmail(), user.getPassword(), user.isEnabled(), true, true, true, getAuthorities(user.getRoles()));
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }

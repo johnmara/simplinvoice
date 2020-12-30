@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +22,12 @@ public class AbstractViewController {
     public String getModelAndView(String viewName, Model model) {
         model.addAttribute(VIEW_MODEL_ATTRIBUTE, viewName);
         return MAIN_VIEW;
+    }
+
+    public String addSuccessMessageAndRedirect(String redirectPath, String successMessage, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("successMessage", successMessage);
+
+        return "redirect:" + redirectPath;
     }
 
     public Pageable constructPageable(PageListRequest pageListRequest) {
