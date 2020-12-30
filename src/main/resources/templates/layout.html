@@ -11,6 +11,10 @@
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" th:href="@{/plugins/fontawesome-free/css/all.min.css}">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" th:href="@{/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css}">
+    <!-- Toastr -->
+    <link rel="stylesheet" th:href="@{/plugins/toastr/toastr.min.css}">
     <!-- DataTables -->
     <link rel="stylesheet" th:href="@{/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css}">
     <link rel="stylesheet" th:href="@{/plugins/datatables-responsive/css/responsive.bootstrap4.min.css}">
@@ -240,8 +244,43 @@
     <script th:src="@{/plugins/datatables-buttons/js/buttons.html5.min.js}"></script>
     <!-- AdminLTE App -->
     <script th:src="@{/js/adminlte.min.js}"></script>
-    <!-- Page Custom Script -->
+    <!-- SweetAlert2 -->
+    <script th:src="@{/plugins/sweetalert2/sweetalert2.min.js}"></script>
+    <!-- Toastr -->
+    <script th:src="@{/plugins/toastr/toastr.min.js}"></script>
+    <!-- Page Specific Script -->
     <th:block th:replace="${view} :: pageCustomScript"></th:block>
+    <script th:inline="javascript">
+
+        $(function() {
+            var Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000
+            });
+
+            //Show success message
+            var isSuccessMessagePresent = /*[[${successMessage != null}]]*/;
+            if(isSuccessMessagePresent) {
+                Toast.fire({
+                    icon: 'success',
+                    title: /*[[${successMessage}]]*/
+                })
+            }
+
+            //Show warning if profile is not completed
+            var isProfileCompleted = /*[[${#authentication.getPrincipal().getUser().getCompanyProfile() != null}]]*/;
+            if(!isProfileCompleted) {
+                $(document).Toasts('create', {
+                    class: 'bg-warning',
+                    title: /*[[#{alert.message.title}]]*/,
+                    body: /*[[#{messages.company.profile.not.complete}]]*/
+                })
+            }
+        });
+
+    </script>
 
 </body>
 </html>
