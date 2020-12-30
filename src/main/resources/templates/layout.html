@@ -112,10 +112,10 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a th:href="@{/deprecated/product/list/paginated}" class="nav-link"
-                               th:classappend="${view.equals('deprecatedProductsList') ? 'active' : ''}">
+                            <a th:href="@{/material/list}" class="nav-link"
+                               th:classappend="${view.equals('materialsList') ? 'active' : ''}">
                                 <i class="nav-icon fas fa-th"></i>
-                                <p th:text="#{deprecated.products.list.title}"></p>
+                                <p th:text="#{menu.materials}"></p>
                             </a>
                         </li>
                         <li class="nav-item"
@@ -248,8 +248,14 @@
     <script th:src="@{/plugins/sweetalert2/sweetalert2.min.js}"></script>
     <!-- Toastr -->
     <script th:src="@{/plugins/toastr/toastr.min.js}"></script>
+    <!-- Bootbox -->
+    <script th:src="@{/plugins/bootbox/bootbox.all.min.js}"></script>
+    <script th:src="@{/plugins/bootbox/bootbox.locales.min.js}"></script>
+    <script th:src="@{/plugins/bootbox/bootbox.min.js}"></script>
     <!-- Page Specific Script -->
     <th:block th:replace="${view} :: pageCustomScript"></th:block>
+    <!-- Custom scripts   -->
+    <script th:src="@{/js/custom.js}"></script>
     <script th:inline="javascript">
 
         $(function() {
@@ -269,6 +275,16 @@
                 })
             }
 
+            //Show success message
+            var isErrorMessagePresent = /*[[${errorMessage != null}]]*/;
+            if(isErrorMessagePresent) {
+                Toast.fire({
+                    icon: 'error',
+                    title: /*[[${errorMessage}]]*/
+                })
+            }
+
+
             //Show warning if profile is not completed
             var isProfileCompleted = /*[[${#authentication.getPrincipal().getUser().getCompanyProfile() != null}]]*/;
             if(!isProfileCompleted) {
@@ -278,6 +294,17 @@
                     body: /*[[#{messages.company.profile.not.complete}]]*/
                 })
             }
+
+            //Confirmation of Delete
+            $("#deleteForm").submit(function(e) {
+                var currentForm = this;
+                e.preventDefault();
+                bootbox.confirm(/*[[#{delete.confirm}]]*/, function(result) {
+                    if (result) {
+                        currentForm.submit();
+                    }
+                });
+            });
         });
 
     </script>

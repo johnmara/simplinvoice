@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <title th:fragment="title" th:text="#{app.title} + ' | ' + #{materials.list.title}"></title>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" th:fragment="container">
+
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 th:text="#{materials.list.title}">DataTables</h1>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title" th:text="#{deprecated.products.list.description}"></h3>
+                                <div class="card-tools">
+                                    <a class="btn btn-default btn-sm" th:href="@{/material/}"><i class="fas fa-plus"></i></a>
+                                </div>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <table id="materialsList" class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="display: none">Id</th>
+                                            <th th:text="#{material.code.field}">Code</th>
+                                            <th th:text="#{material.type}">Type</th>
+                                            <th th:text="#{material.description.field}">Description</th>
+                                            <th th:text="#{material.measurement.unit}">Measurement Unit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="material, iStat: ${materialsList}">
+                                            <td th:text="${material.id}"></td>
+                                            <td th:text="${material.code}"></td>
+                                            <td th:text="#{'material.type.' + ${material.type}}">Type</td>
+                                            <td th:text="${material.description}">Description</td>
+                                            <td th:text="${material.measurementUnit != null} ? #{'material.measurement.unit.' + ${material.measurementUnit}}">Material unit</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+
+    </div>
+    <!-- /.content-wrapper -->
+
+    <th:block th:fragment="pageCustomScript">
+
+        <script th:inline="javascript">
+            var context = /*[[@{/material/}]]*/ '';
+
+            $(function () {
+                $("#materialsList").DataTable({
+                    "responsive": true,
+                    "lengthChange": false,
+                    "autoWidth": false,
+                    "buttons": [{ extend: 'csvHtml5'}, { extend: 'excelHtml5'}],
+                    "columnDefs": [
+                        {
+                            "targets": 0,
+                            "visible": false,
+                            "searchable": false
+                        },
+                        {
+                            "targets": 1,
+                            "render": function ( data, type, row, meta ) {
+                                return '<a href="'+ context + row[0] +'">' + data + '</a>';
+                        }
+                    } ]
+                }).buttons().container().appendTo('#materialsList_wrapper .col-md-6:eq(0)');
+            });
+        </script>
+
+    </th:block>
+
+
+</html>

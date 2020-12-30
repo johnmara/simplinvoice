@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class AbstractViewController {
+public abstract class AbstractViewController {
 
     private static final String MAIN_VIEW = "layout";
     private static final String VIEW_MODEL_ATTRIBUTE = "view";
@@ -26,6 +26,12 @@ public class AbstractViewController {
 
     public String addSuccessMessageAndRedirect(String redirectPath, String successMessage, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("successMessage", successMessage);
+
+        return "redirect:" + redirectPath;
+    }
+
+    public String addErrorMessageAndRedirect(String redirectPath, String errorMessage, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
 
         return "redirect:" + redirectPath;
     }

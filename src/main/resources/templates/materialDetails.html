@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <title th:fragment="title" th:text="#{app.title} + ' | ' + (${material.id != null} ? #{material.view.page.title} : #{material.create.page.title})"></title>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" th:fragment="container">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0" th:text="${material.id} != null ? #{material.view.page.title} : #{material.create.page.title}">Material</h1>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div th:if="${modelError}" class="alert alert-danger alert-dismissible" th:inline="text">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+                            <h5><i class="icon fas fa-ban"></i> [[#{alert.message.title}]]</h5>
+                            [[${modelError}]]
+                        </div>
+
+                        <!-- Horizontal Form -->
+                        <div class="card card-info">
+                            <!-- form start -->
+                            <form id="createForm" class="form-horizontal" th:action="@{/material/save}" th:object="${material}" method="post">
+                                <input type="hidden" th:field="*{id}" id="materialId">
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label" th:text="#{material.type}">Type</label>
+                                        <div class="col-sm-10">
+                                            <div class="custom-control custom-radio" th:each="type, iStat : ${T(gr.aueb.dmst.simplinvoice.enums.MaterialType).values()}">
+                                                <input class="custom-control-input" type="radio" th:id="'inputType' + ${iStat.index}"
+                                                       th:checked="${type.equals(material.type)}" name="type" th:value="${type}">
+                                                <label th:for="'inputType' + ${iStat.index}" class="custom-control-label" th:text="#{'material.type.' + ${type.name()}}">Custom Radio</label>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputCode" class="col-sm-2 col-form-label" th:text="#{material.code.field}">Code</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="inputCode" th:placeholder="#{material.code.field}" required th:field="*{code}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputDescription" class="col-sm-2 col-form-label" th:text="#{material.description.field}">Description</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="inputDescription" th:placeholder="#{material.description.field}" required th:field="*{description}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputVatCategory" class="col-sm-2 col-form-label" th:text="#{material.vat.category}">VAT Category</label>
+                                        <div class="col-sm-10">
+                                            <select id="inputVatCategory" class="custom-select" name="vatCategory">
+                                                <option th:value="${null}" th:text="#{dropdown.select}"></option>
+                                                <option th:each="vatCategory : ${T(gr.aueb.dmst.simplinvoice.enums.VatCategory).values()}"
+                                                        th:selected="${vatCategory.equals(material.vatCategory)}"
+                                                        th:value="${vatCategory}" th:text="#{'material.vat.category.' + ${vatCategory.name()}}">option 1</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputMeasurementUnit" class="col-sm-2 col-form-label" th:text="#{material.measurement.unit}">Measurement unit</label>
+                                        <div class="col-sm-10">
+                                            <select id="inputMeasurementUnit" class="custom-select" name="measurementUnit">
+                                                <option th:value="${null}" th:text="#{dropdown.select}"></option>
+                                                <option th:each="measurementUnit : ${T(gr.aueb.dmst.simplinvoice.enums.MeasurementUnit).values()}"
+                                                        th:selected="${measurementUnit.equals(material.measurementUnit)}"
+                                                        th:value="${measurementUnit}" th:text="#{'material.measurement.unit.' + ${measurementUnit.name()}}">option 1</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputAadeIncomeClassification" class="col-sm-2 col-form-label" th:text="#{material.aade.income.classification}">AADE Income Classification</label>
+                                        <div class="col-sm-10">
+                                            <select id="inputAadeIncomeClassification" class="custom-select" name="aadeIncomeClassification">
+                                                <option th:value="${null}" th:text="#{dropdown.select}"></option>
+                                                <option th:each="aadeIncomeClassification : ${T(gr.aueb.dmst.simplinvoice.enums.AadeIncomeClassification).values()}"
+                                                        th:selected="${aadeIncomeClassification.equals(material.aadeIncomeClassification)}"
+                                                        th:value="${aadeIncomeClassification}" th:text="#{'material.aade.income.classification.' + ${aadeIncomeClassification.name()}}">option 1</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputWholesalePrice" class="col-sm-2 col-form-label" th:text="#{material.wholesale.price}">Wholesale Price</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">€</span>
+                                                </div>
+                                                <input id="inputWholesalePrice" type="number" step=".01" class="form-control" th:field="*{wholesalePrice}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputRetailPrice" class="col-sm-2 col-form-label" th:text="#{material.retail.price}">Retail Price</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">€</span>
+                                                </div>
+                                                <input id="inputRetailPrice" type="number" step=".01" class="form-control" th:field="*{retailPrice}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                            <!-- /.card-body -->
+                            <div class="card-footer">
+                                <form id="deleteForm" th:if="${material.id}" th:action="@{'/material/delete/{id}'(id=${material.id})}" th:method="delete">
+                                    <button type="submit" class="btn btn-danger float-left" th:text="#{delete.btn}">Delete</button>
+                                </form>
+                                <button type="submit" class="btn btn-info float-right" th:text="#{save.btn}" form="createForm">Save</button>
+                            </div>
+                            <!-- /.card-footer -->
+                        </div>
+                        <!-- /.card -->
+
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <th:block th:fragment="pageCustomScript" />
+
+</html>
