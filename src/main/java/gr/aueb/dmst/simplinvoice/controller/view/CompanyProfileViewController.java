@@ -2,10 +2,12 @@ package gr.aueb.dmst.simplinvoice.controller.view;
 
 import gr.aueb.dmst.simplinvoice.Utils;
 import gr.aueb.dmst.simplinvoice.model.CompanyProfile;
+import gr.aueb.dmst.simplinvoice.model.CustomUserDetails;
 import gr.aueb.dmst.simplinvoice.model.User;
 import gr.aueb.dmst.simplinvoice.service.CompanyProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -42,14 +44,15 @@ public class CompanyProfileViewController extends AbstractViewController {
     }
 
     @PostMapping("/update")
-    public String updateCOmpanyProfile(
+    public String updateCompanyProfile(
             @ModelAttribute("companyProfile") @Valid CompanyProfile companyProfile, Errors errors, Model model, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 
         if(errors.hasErrors())
             return getModelAndView("companyProfile", model);
 
         companyProfile.setUser(Utils.getUserFromHttpServletRequest(request));
-        companyProfileService.addCompanyProfile(companyProfile);
+
+        ((CustomUserDetails)((UsernamePasswordAuthenticationToken)request.getUserPrincipal()).getPrincipal()).getUser().setCompanyProfile(companyProfileService.addCompanyProfile(companyProfile));
 
         return addSuccessMessageAndRedirect("/company/profile/retrieve", messageSource.getMessage("configure.company.success", null, request.getLocale()), redirectAttributes);
     }

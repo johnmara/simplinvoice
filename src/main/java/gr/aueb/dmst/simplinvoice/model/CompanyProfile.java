@@ -17,6 +17,7 @@ public class CompanyProfile {
 
     @NotEmpty(message = "{messages.not.empty.field}") //instead of using dto
     private String companyName;
+    @NotEmpty(message = "{messages.not.empty.field}") //instead of using dto
     private String afm;
     private String taxOffice;
     private String address;
@@ -86,4 +87,18 @@ public class CompanyProfile {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Override
+    public String toString() {
+        return "CompanyProfile{" +
+                "id=" + id +
+                ", companyName='" + companyName + '\'' +
+                ", afm='" + afm + '\'' +
+                ", taxOffice='" + taxOffice + '\'' +
+                ", address='" + address + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
+
 }

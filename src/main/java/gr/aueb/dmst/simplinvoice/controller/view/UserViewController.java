@@ -55,7 +55,7 @@ public class UserViewController {
         } catch (final RuntimeException ex) {
             return new ModelAndView("emailError", "user", userDto);
         }
-        return new ModelAndView("login");
+        return new ModelAndView("redirect:/login");
     }
 
 }

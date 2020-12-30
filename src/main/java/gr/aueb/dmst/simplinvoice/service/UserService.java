@@ -35,12 +35,12 @@ public class UserService {
                             +  userDto.getEmail());
         }
 
-        final User user = new User();
+        User user = new User();
 
         user.setFullName(userDto.getFullName());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setEmail(userDto.getEmail());
-        user.setRoles(Arrays.asList(roleRepository.findByName(UserRole.USER.name())));
+        user.setRoles(Arrays.asList(roleRepository.findByName(UserRole.COMPANY.name())));
 
         return userRepository.save(user);
     }

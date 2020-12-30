@@ -24,6 +24,9 @@ public class User {
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
 
+    @OneToOne(mappedBy = "user")
+    private CompanyProfile companyProfile;
+
     public User() {
         super();
         this.enabled = false;
@@ -101,6 +104,14 @@ public class User {
             return false;
         }
         return true;
+    }
+
+    public CompanyProfile getCompanyProfile() {
+        return companyProfile;
+    }
+
+    public void setCompanyProfile(CompanyProfile companyProfile) {
+        this.companyProfile = companyProfile;
     }
 
     @Override
