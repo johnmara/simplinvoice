@@ -3,6 +3,7 @@ package gr.aueb.dmst.simplinvoice.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 @Entity
 public class CompanyProfile {
@@ -23,6 +24,9 @@ public class CompanyProfile {
     private String address;
     private String phoneNumber;
     private String email;
+
+    @OneToMany(mappedBy = "companyProfile")
+    private List<Material> materials;
 
     public Long getId() {
         return id;
@@ -86,6 +90,14 @@ public class CompanyProfile {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Material> getMaterials() {
+        return materials;
+    }
+
+    public void setMaterials(List<Material> materials) {
+        this.materials = materials;
     }
 
     @Override
