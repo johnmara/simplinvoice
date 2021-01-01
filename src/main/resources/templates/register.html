@@ -46,7 +46,7 @@
         <div class="input-group mb-3">
           <input type="email" class="form-control"
                  th:classappend="${not #lists.isEmpty(#fields.errors('email')) ? 'is-invalid' : ''}"
-                 th:placeholder="#{email.placeholder}" th:field="*{email}">
+                 th:placeholder="#{email.field}" th:field="*{email}">
           <div class="invalid-feedback order-last " th:each="error: ${#fields.errors('email')}" th:inline="text">
             [[${error}]]
           </div>

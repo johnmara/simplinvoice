@@ -15,7 +15,7 @@ public class Material {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable=false)
     private String code;
 
     @Enumerated(EnumType.STRING)
@@ -28,7 +28,7 @@ public class Material {
     @Enumerated(EnumType.STRING)
     private AadeIncomeClassification aadeIncomeClassification;
     private BigDecimal wholesalePrice;
-    private BigDecimal retailPrice;
+    private BigDecimal retailPrice; //me fpa
 
     @ManyToOne
     @JoinColumn(name = "company_profile_id", referencedColumnName = "id")
