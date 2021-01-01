@@ -49,7 +49,6 @@ public class TraderViewController extends AbstractViewController {
         } else {
             trader = new Trader();
             trader.setType(traderType);
-            System.out.println(Constants.countries);
         }
 
         model.addAttribute("trader", trader);

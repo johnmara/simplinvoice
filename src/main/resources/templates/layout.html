@@ -175,9 +175,9 @@
                             </ul>
                         </li>
                         <li class="nav-item"
-                            th:classappend="${#lists.contains({'companyProfile', 'systemConfiguration', 'invoicingConfiguration'}, view) ? 'menu-open' : ''}">
+                            th:classappend="${#lists.contains({'companyProfile', 'systemConfig', 'invoicingConfiguration'}, view) ? 'menu-open' : ''}">
                             <a href="#" class="nav-link"
-                               th:classappend="${#lists.contains({'companyProfile', 'systemConfiguration', 'invoicingConfiguration'}, view) ? 'active' : ''}">
+                               th:classappend="${#lists.contains({'companyProfile', 'systemConfig', 'invoicingConfiguration'}, view) ? 'active' : ''}">
                                 <i class="nav-icon fas fa-sliders-h"></i>
                                 <p th:inline="text">
                                     [[#{menu.configuration}]]
@@ -193,8 +193,8 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a th:href="@{/configure/system}" class="nav-link"
-                                       th:classappend="${view.equals('systemConfiguration') ? 'active' : ''}">
+                                    <a th:href="@{/system/config/retrieve}" class="nav-link"
+                                       th:classappend="${view.equals('systemConfig') ? 'active' : ''}">
                                         <i class="fas fa-cogs nav-icon"></i>
                                         <p th:text="#{menu.configure.system}">System</p>
                                     </a>
