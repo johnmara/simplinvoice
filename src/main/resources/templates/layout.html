@@ -115,15 +115,15 @@
                         </li>
                         <li class="nav-item">
                             <a th:href="@{/material/list}" class="nav-link"
-                               th:classappend="${view.equals('materialsList') ? 'active' : ''}">
+                               th:classappend="${#lists.contains({'materialsList', 'materialDetails'}, view) ? 'active' : ''}">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p th:text="#{menu.materials}"></p>
                             </a>
                         </li>
                         <li class="nav-item"
-                            th:classappend="${#lists.contains({'tradersList'}, view) ? 'menu-open' : ''}">
+                            th:classappend="${#lists.contains({'tradersList', 'traderDetails'}, view) ? 'menu-open' : ''}">
                             <a href="#" class="nav-link"
-                               th:classappend="${#lists.contains({'tradersList'}, view) ? 'active' : ''}">
+                               th:classappend="${#lists.contains({'tradersList', 'traderDetails'}, view) ? 'active' : ''}">
                                 <i class="nav-icon fas fa-people-arrows"></i>
                                 <p th:inline="text">
                                     [[#{menu.traders}]]
@@ -133,14 +133,14 @@
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a th:href="@{/trader/list(type=${T(gr.aueb.dmst.simplinvoice.enums.TraderType).SUPPLIER})}" class="nav-link"
-                                       th:classappend="${view.equals('tradersList') && type == T(gr.aueb.dmst.simplinvoice.enums.TraderType).SUPPLIER ? 'active' : ''}">
+                                       th:classappend="${#lists.contains({'tradersList', 'traderDetails'}, view) && type == T(gr.aueb.dmst.simplinvoice.enums.TraderType).SUPPLIER ? 'active' : ''}">
                                         <i class="fas fa-warehouse nav-icon"></i>
                                         <p th:text="#{menu.traders.suppliers}">Suppliers</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a th:href="@{/trader/list(type=${T(gr.aueb.dmst.simplinvoice.enums.TraderType).CUSTOMER})}" class="nav-link"
-                                       th:classappend="${view.equals('tradersList') && type == T(gr.aueb.dmst.simplinvoice.enums.TraderType).CUSTOMER ? 'active' : ''}">
+                                       th:classappend="${#lists.contains({'tradersList', 'traderDetails'}, view) && type == T(gr.aueb.dmst.simplinvoice.enums.TraderType).CUSTOMER ? 'active' : ''}">
                                         <i class="fas fa-cash-register nav-icon"></i>
                                         <p th:text="#{menu.traders.customers}">Customers</p>
                                     </a>
@@ -175,9 +175,9 @@
                             </ul>
                         </li>
                         <li class="nav-item"
-                            th:classappend="${#lists.contains({'companyProfile', 'systemConfig', 'documentSeriesList'}, view) ? 'menu-open' : ''}">
+                            th:classappend="${#lists.contains({'companyProfile', 'systemConfig', 'documentSeriesDetails', 'documentSeriesList'}, view) ? 'menu-open' : ''}">
                             <a href="#" class="nav-link"
-                               th:classappend="${#lists.contains({'companyProfile', 'systemConfig', 'documentSeriesList'}, view) ? 'active' : ''}">
+                               th:classappend="${#lists.contains({'companyProfile', 'systemConfig', 'documentSeriesDetails', 'documentSeriesList'}, view) ? 'active' : ''}">
                                 <i class="nav-icon fas fa-sliders-h"></i>
                                 <p th:inline="text">
                                     [[#{menu.configuration}]]
@@ -201,7 +201,7 @@
                                 </li>
                                 <li class="nav-item">
                                     <a th:href="@{/document/series/list}" class="nav-link"
-                                       th:classappend="${view.equals('documentSeriesList') ? 'active' : ''}">
+                                       th:classappend="${#lists.contains({'documentSeriesDetails', 'documentSeriesList'}, view) ? 'active' : ''}">
                                         <i class="fas fa-file-invoice nav-icon"></i>
                                         <p th:text="#{menu.configure.document.series}">Invoicing</p>
                                     </a>

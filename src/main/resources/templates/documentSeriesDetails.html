@@ -70,6 +70,7 @@
                                                 <option th:value="${null}" th:text="#{dropdown.select}"></option>
                                                 <option th:each="invoiceType : ${T(gr.aueb.dmst.simplinvoice.enums.AadeInvoiceType).values()}"
                                                         th:selected="${invoiceType.equals(documentSeries.aadeInvoiceType)}"
+                                                        th:attr="data-category=${invoiceType.category}"
                                                         th:value="${invoiceType}" th:text="#{'aade.invoice.type.' + ${invoiceType.name()}}">option 1</option>
                                             </select>
                                         </div>
@@ -106,13 +107,32 @@
             var $invoiceCategoryDropdown = $("#inputAadeInvoiceCategory");
             var $invoiceTypeDropdown = $("#inputAadeInvoiceType");
             var invoiceTypeTextMap = {};
+            //Initiate the map which holds the messages
             $invoiceTypeDropdown.children('option').each(function() {
                 invoiceTypeTextMap[$(this).val()] = $(this).text();
             });
 
+            var $assignedinvoiceType = $invoiceTypeDropdown.children('option:selected');
+
             $invoiceTypeDropdown.empty();
             $invoiceTypeDropdown.append($("<option></option>")
                 .attr("value", null).text(invoiceTypeTextMap['']));
+
+            if($assignedinvoiceType != null) {
+                var category = $assignedinvoiceType.data('category');
+                //mark the category as selected
+                $invoiceCategoryDropdown.children('option[value="' + category + '"]').attr('selected','selected');
+
+                $.each(invoiceTypeMap[category], function(index, value) {
+                    if($assignedinvoiceType.val() === value) {
+                        $invoiceTypeDropdown.append($("<option></option>")
+                            .attr("value", value).attr('selected', 'selected').text(invoiceTypeTextMap[value]));
+                    } else {
+                        $invoiceTypeDropdown.append($("<option></option>")
+                            .attr("value", value).text(invoiceTypeTextMap[value]));
+                    }
+                });
+            }
 
             $invoiceCategoryDropdown.change(function () {
                 $invoiceTypeDropdown.empty(); // remove old options
@@ -120,9 +140,6 @@
                     $invoiceTypeDropdown.append($("<option></option>")
                         .attr("value", value).text(invoiceTypeTextMap[value]));
                 });
-
-                var end = this.value;
-                var firstDropVal = $invoiceTypeDropdown.val();
             });
         </script>
 
