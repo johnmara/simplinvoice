@@ -51,6 +51,7 @@ public class TraderViewController extends AbstractViewController {
             trader.setType(traderType);
         }
 
+        model.addAttribute("type", traderType);
         model.addAttribute("trader", trader);
 
         return getModelAndView("traderDetails", model);
