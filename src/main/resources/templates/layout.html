@@ -175,9 +175,9 @@
                             </ul>
                         </li>
                         <li class="nav-item"
-                            th:classappend="${#lists.contains({'companyProfile', 'systemConfig', 'invoicingConfiguration'}, view) ? 'menu-open' : ''}">
+                            th:classappend="${#lists.contains({'companyProfile', 'systemConfig', 'documentSeriesList'}, view) ? 'menu-open' : ''}">
                             <a href="#" class="nav-link"
-                               th:classappend="${#lists.contains({'companyProfile', 'systemConfig', 'invoicingConfiguration'}, view) ? 'active' : ''}">
+                               th:classappend="${#lists.contains({'companyProfile', 'systemConfig', 'documentSeriesList'}, view) ? 'active' : ''}">
                                 <i class="nav-icon fas fa-sliders-h"></i>
                                 <p th:inline="text">
                                     [[#{menu.configuration}]]
@@ -200,10 +200,10 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a th:href="@{/configure/invoicing}" class="nav-link"
-                                       th:classappend="${view.equals('invoicingConfiguration') ? 'active' : ''}">
+                                    <a th:href="@{/document/series/list}" class="nav-link"
+                                       th:classappend="${view.equals('documentSeriesList') ? 'active' : ''}">
                                         <i class="fas fa-file-invoice nav-icon"></i>
-                                        <p th:text="#{menu.configure.invoicing}">Invoicing</p>
+                                        <p th:text="#{menu.configure.document.series}">Invoicing</p>
                                     </a>
                                 </li>
                             </ul>
