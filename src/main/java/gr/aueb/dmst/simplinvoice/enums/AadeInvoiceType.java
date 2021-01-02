@@ -62,6 +62,6 @@ public enum AadeInvoiceType {
     }
 
     public enum AadeInvoiceTypeCategory {
-        CAT_1, CAT_2, CAT_3, CAT_5, CAT_6, CAT_7, CAT_8, CAT_11, CAT_12, CAT_13, CAT_14, CAT_15, CAT_16, CAT_17
+        CAT_1, CAT_2, CAT_3, CAT_5, CAT_6, CAT_7, CAT_8, CAT_11, /*CAT_12,*/ CAT_13, CAT_14, CAT_15, CAT_16, CAT_17
     }
 }
