@@ -10,7 +10,6 @@ public class DashboardViewController extends AbstractViewController {
 
     @GetMapping(value = {"/", "/dashboard"})
     String getDashboardView(final Model model) {
-        System.out.println(Constants.aadeInvoiceTypeMap);
         return getModelAndView("dashboard", model);
     }
 
