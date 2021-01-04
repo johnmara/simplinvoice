@@ -49,10 +49,10 @@ public class DocumentHeader {
     @JoinColumn(name = "document_series_id", referencedColumnName = "id")
     private DocumentSeries documentSeries;
 
-    @OneToMany(mappedBy = "documentHeader")
+    @OneToMany(mappedBy = "documentHeader", cascade = CascadeType.ALL)
     private List<DocumentTax> documentTaxes;
 
-    @OneToMany(mappedBy = "documentHeader")
+    @OneToMany(mappedBy = "documentHeader", cascade = CascadeType.ALL)
     private List<DocumentItem> documentItems;
 
     @OneToOne

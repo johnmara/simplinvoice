@@ -83,6 +83,7 @@ public class DocumentViewController extends AbstractViewController {
             return getModelAndView("documentIssuePage", model);
 
         documentHeader.setCompanyProfile(Utils.getUserFromHttpServletRequest(request).getCompanyProfile());
+        documentHeader.setType(DocumentType.ISSUED);
 
         try {
             documentService.addDocumentHeader(documentHeader);
