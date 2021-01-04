@@ -62,6 +62,7 @@ public class DocumentViewController extends AbstractViewController {
         documentHeader.setDate(new Date());
         documentHeader.setDocumentItems(new ArrayList<>());
         documentHeader.getDocumentItems().add(new DocumentItem());
+        documentHeader.setDocumentTaxes(new ArrayList<>());
 
         List<Trader> tradersList = traderService.getTradersList(TraderType.CUSTOMER, companyProfileId);
         List<Material> materialsList = materialService.getMaterialsList(companyProfileId);
@@ -105,15 +106,30 @@ public class DocumentViewController extends AbstractViewController {
         return "documentIssuePage::#documentItems";
     }
 
-    // "removeItem" parameter contains index of a item that will be removed.
     @PostMapping(params = "removeItem", path = {"/item", "/item/{id}"})
-    public String removeOrder(DocumentHeader documentHeader, @RequestParam("removeItem") int index, HttpServletRequest request, Model model) {
+    public String removeDocumentItem(DocumentHeader documentHeader, @RequestParam("removeItem") int index, HttpServletRequest request, Model model) {
         Long companyProfileId = Utils.getUserFromHttpServletRequest(request).getCompanyProfile().getId();
         List<Material> materialsList = materialService.getMaterialsList(companyProfileId);
         model.addAttribute("materialsList", materialsList);
 
         documentHeader.getDocumentItems().remove(index);
         return "documentIssuePage::#documentItems";
+
+    }
+
+    @PostMapping(params = "addTax", path = {"/tax", "/tax/{id}"})
+    public String addDocumentTax(DocumentHeader documentHeader, HttpServletRequest request, Model model) {
+        if(documentHeader.getDocumentTaxes() == null) {
+            documentHeader.setDocumentTaxes(new ArrayList<>());
+        }
+        documentHeader.getDocumentTaxes().add(new DocumentTax());
+        return "documentIssuePage::#documentTaxes";
+    }
+
+    @PostMapping(params = "removeTax", path = {"/tax", "/tax/{id}"})
+    public String removeDocumentTax(DocumentHeader documentHeader, @RequestParam("removeTax") int index, HttpServletRequest request, Model model) {
+        documentHeader.getDocumentTaxes().remove(index);
+        return "documentIssuePage::#documentTaxes";
 
     }
 

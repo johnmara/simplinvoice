@@ -1,5 +1,6 @@
 package gr.aueb.dmst.simplinvoice;
 
+import gr.aueb.dmst.simplinvoice.enums.AadeDocumentTaxCategory;
 import gr.aueb.dmst.simplinvoice.enums.AadeInvoiceType;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,6 +17,11 @@ public class Constants {
     public static Map<AadeInvoiceType.AadeInvoiceTypeCategory, List<AadeInvoiceType>> aadeInvoiceTypeMap;
     static {
         aadeInvoiceTypeMap =  Arrays.stream(AadeInvoiceType.values()).collect(Collectors.groupingBy(it->it.category));
+    }
+
+    public static Map<AadeDocumentTaxCategory.AadeDocumentTaxType, List<AadeDocumentTaxCategory>> aadeDocumentTaxCategoryMap;
+    static {
+        aadeDocumentTaxCategoryMap =  Arrays.stream(AadeDocumentTaxCategory.values()).collect(Collectors.groupingBy(it->it.type));
     }
 
 }

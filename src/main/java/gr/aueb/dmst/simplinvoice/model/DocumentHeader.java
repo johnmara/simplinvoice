@@ -31,7 +31,6 @@ public class DocumentHeader {
     private DocumentPaymentMethod paymentMethod;
     private String currency;
     private String notes;
-    private BigDecimal totalQuantity;
     private BigDecimal totalNetValue;
     private BigDecimal totalDiscountValue;
     private BigDecimal totalVatValue;
@@ -122,14 +121,6 @@ public class DocumentHeader {
 
     public void setNotes(String notes) {
         this.notes = notes;
-    }
-
-    public BigDecimal getTotalQuantity() {
-        return totalQuantity;
-    }
-
-    public void setTotalQuantity(BigDecimal totalQuantity) {
-        this.totalQuantity = totalQuantity;
     }
 
     public BigDecimal getTotalNetValue() {

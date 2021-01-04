@@ -50,12 +50,12 @@ public enum AadeDocumentTaxCategory {
         AADE_TAX_CAT_5("1", AADE_TAX_TYPE_5, null);
 
         public final String aadeCode;
-        public final AadeDocumentTaxCategory.AadeDocumentTaxType category;
+        public final AadeDocumentTaxCategory.AadeDocumentTaxType type;
         public final BigDecimal percent;
 
-        private AadeDocumentTaxCategory(String aadeCode, AadeDocumentTaxCategory.AadeDocumentTaxType category, BigDecimal percent) {
+        private AadeDocumentTaxCategory(String aadeCode, AadeDocumentTaxCategory.AadeDocumentTaxType type, BigDecimal percent) {
                 this.aadeCode = aadeCode;
-                this.category = category;
+                this.type = type;
                 this.percent = percent;
         }
 

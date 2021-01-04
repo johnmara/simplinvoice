@@ -109,6 +109,63 @@
 
                         </div>
 
+                        <!-- Taxes  -->
+                        <div class="card card-primary">
+                            <!-- form start -->
+                            <div class="card-header">
+                                <h3 class="card-title" th:text="#{document.issue.taxes}">Taxes</h3>
+                            </div>
+
+                            <div class="card-body" id="documentTaxes">
+                                <div class="row d-flex align-items-stretch">
+                                    <button th:if="${documentHeader.documentTaxes.size == 0}" type="button" name="addTax" class="btn btn-sm btn-success" th:text="#{document.issue.taxes.add}">Add</button>
+
+                                    <div class="col-12 align-items-stretch document-tax" th:each="documentTax, itemStat: ${documentHeader.documentTaxes}">
+                                        <div class="card bg-light">
+                                            <div class="card-header text-muted border-bottom-0" th:inline="text">
+                                                [[${'#' + (itemStat.index + 1)}]]
+                                            </div>
+                                            <div class="card-body pt-0">
+                                                <div class="form-group row">
+                                                    <div class="col-sm-6">
+                                                        <select th:id="'inputTaxType' + ${itemStat.index}" class="form-control" required>
+                                                            <option th:value="${null}" th:text="#{dropdown.select}"></option>
+                                                            <option th:each="taxType : ${T(gr.aueb.dmst.simplinvoice.enums.AadeDocumentTaxCategory$AadeDocumentTaxType).values()}"
+                                                                    th:value="${taxType}" th:text="#{'aade.tax.type.' + ${taxType}}">option 1</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <select th:id="'inputTaxCategory' + ${itemStat.index}" class="form-control select2" required th:field="${documentHeader.documentTaxes[__${itemStat.index}__].type}">
+                                                            <option th:value="${null}" th:text="#{dropdown.select}"></option>
+                                                            <option th:each="taxCategory : ${T(gr.aueb.dmst.simplinvoice.enums.AadeDocumentTaxCategory).values()}"
+                                                                    th:attr="data-taxCategoryValue=${taxCategory.percent},
+                                                                             data-type=${taxCategory.type}"
+                                                                    th:value="${taxCategory}" th:text="#{'aade.tax.category.' + ${taxCategory}}">option 1</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label th:for="'inputTaxAmount' + ${itemStat.index}" class="col-sm-2 col-form-label" th:text="#{document.issue.taxes.amount.field}">Amount</label>
+                                                    <div class="col-sm-6">
+                                                        <input type="number" step=".01" class="form-control tax-value" th:id="'inputTaxAmount' + ${itemStat.index}" th:placeholder="#{document.issue.taxes.amount.field}" readonly th:field="${documentHeader.documentTaxes[__${itemStat.index}__].amount}">
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="text-right">
+                                                    <button type="button" name="removeTax" class="btn btn-sm bg-red" th:value="${itemStat.index}"><i class="fas fa-trash"></i></button>
+                                                    <button th:if="${(itemStat.index+1) == documentHeader.documentTaxes.size}" type="button" name="addTax" class="btn btn-sm btn-success" th:text="#{document.issue.taxes.add}">Add</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
                         <!-- Counterpart  -->
                         <div class="card card-primary">
                             <!-- form start -->
@@ -201,7 +258,7 @@
                                                     <div class="col-sm-3">
                                                         <div class="form-group">
                                                             <label th:for="'inputDiscountValue' + ${itemStat.index}" th:text="#{document.issue.discount}">Country</label>
-                                                            <input type="number" step=".01" class="form-control" th:id="'inputDiscountValue' + ${itemStat.index}" th:placeholder="#{document.issue.discount}" required th:field="${documentHeader.documentItems[__${itemStat.index}__].discountValue}">
+                                                            <input type="number" step=".01" class="form-control" th:id="'inputDiscountValue' + ${itemStat.index}" th:placeholder="#{document.issue.discount}" th:field="${documentHeader.documentItems[__${itemStat.index}__].discountValue}">
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-3">
@@ -219,7 +276,7 @@
                                                     <div class="col-sm-3">
                                                         <div class="form-group">
                                                             <label th:for="'inputItemFinalValue' + ${itemStat.index}" th:text="#{document.issue.item.final.value}">Final Value</label>
-                                                            <input type="text" class="form-control item-final-value" th:id="'inputItemFinalValue' + ${itemStat.index}" th:placeholder="#{document.issue.item.final.value}" readonly th:field="${documentHeader.documentItems[__${itemStat.index}__].finalValue}">
+                                                            <input type="number" class="form-control item-final-value" th:id="'inputItemFinalValue' + ${itemStat.index}" th:placeholder="#{document.issue.item.final.value}" readonly th:field="${documentHeader.documentItems[__${itemStat.index}__].finalValue}">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -248,22 +305,28 @@
 
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3">
                                         <div class="form-group">
                                             <label for="totalNetValue" th:text="#{document.issue.total.net.value}">Total Net value</label>
                                             <input type="number" class="form-control" id="totalNetValue" th:placeholder="#{document.issue.total.net.value}" readonly th:field="*{totalNetValue}">
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3">
                                         <div class="form-group">
                                             <label for="totalVatValue" th:text="#{document.issue.total.vat.value}">Total Net value</label>
                                             <input type="number" class="form-control" id="totalVatValue" th:placeholder="#{document.issue.total.vat.value}" readonly th:field="*{totalVatValue}">
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label for="totalTaxValue" th:text="#{document.issue.total.tax.value}">Total Tax value</label>
+                                            <input type="number" class="form-control" id="totalTaxValue" th:placeholder="#{document.issue.total.tax.value}" readonly th:field="*{totalTaxValue}">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
                                         <div class="form-group">
                                             <label for="totalFinalValue" th:text="#{document.issue.total.final.value}">Total final value</label>
-                                            <input type="number" class="form-control" id="totalFinalValue" th:placeholder="#{document.issue.total.final.value}" readonly th:field="*{totalFinalValue}">
+                                            <input type="number" step="0.1" class="form-control" id="totalFinalValue" th:placeholder="#{document.issue.total.final.value}" readonly th:field="*{totalFinalValue}">
                                         </div>
                                     </div>
                                 </div>
@@ -292,6 +355,10 @@
 <th:block th:fragment="pageCustomScript">
     <script th:inline="javascript">
         var url = /*[[@{/}]]*/;
+        var taxCategoryMap = /*[[${T(gr.aueb.dmst.simplinvoice.Constants).aadeDocumentTaxCategoryMap}]]*/;
+        var taxCategoryTextMap = {};
+        var taxCategoryPercentMap = {};
+
         $(function () {
             //Initialize Select2 Elements
             $('.select2').select2()
@@ -319,6 +386,14 @@
                     $("#counterPartName").val(data.name);
                 }
             });
+        });
+
+        $( "body" ).on("change", '[id^=inputTaxType], [id^=inputTaxCategory]', function( event ) {
+            var $parentElement = $(this).parents('.card-body').first();
+            var $inputTaxAmount = $parentElement.find('[id^=inputTaxAmount]');
+            $inputTaxAmount.val('');
+
+            initiateDocumentTax($parentElement)
         });
 
         $( "body" ).on("change", '[id^=inputMaterial]', function( event ) {
@@ -379,15 +454,78 @@
             calculateTotalValues();
         });
 
-        function calculateTotalValues () {
-            var itemFinalValues = $('.item-final-value');
-            var totalFinalValue = 0;
-            for (var i = 0; i < itemFinalValues.length; i++) {
-                totalFinalValue += Number(itemFinalValues[i].value);
+        function initiateDocumentTaxes() {
+            var $documentTaxesElements = $('#documentTaxes').find('.document-tax');
+            for (var i = 0; i < $documentTaxesElements.length; i++) {
+                initiateDocumentTax($documentTaxesElements[i])
             }
-            $('#totalNetValue').val(calculateTotalClassValues('.item-net-value'));
-            $('#totalVatValue').val(calculateTotalClassValues('.item-vat-value'));
-            $('#totalFinalValue').val(calculateTotalClassValues('.item-final-value'));
+        }
+
+        function initiateDocumentTax(parentElement) {
+            var $taxTypeDropdown = $(parentElement).find('[id^=inputTaxType]');
+            var $taxCategoryDropdown = $(parentElement).find('[id^=inputTaxCategory]');
+            var $inputTaxAmount = $(parentElement).find('[id^=inputTaxAmount]');
+
+            //Initiate the map which holds the messages from UI list
+            if(Object.keys(taxCategoryTextMap).length === 0) {
+                $taxCategoryDropdown.children('option').each(function() {
+                    taxCategoryTextMap[$(this).val()] = $(this).text();
+                });
+            }
+
+            if(Object.keys(taxCategoryPercentMap).length === 0) {
+                $taxCategoryDropdown.children('option').each(function() {
+                    taxCategoryPercentMap[$(this).val()] = $(this).data('taxcategoryvalue');
+                });
+            }
+
+            var $assignedTaxType = $taxTypeDropdown.children('option:selected');
+            var $assignedTaxCategory = $taxCategoryDropdown.children('option:selected');
+
+            $taxCategoryDropdown.empty();
+            $taxCategoryDropdown.append($("<option></option>")
+                .attr("value", null).text(taxCategoryTextMap['']));
+
+            var type = $assignedTaxCategory.data('type') != null ? $assignedTaxCategory.data('type') : $assignedTaxType.val();
+
+            $taxTypeDropdown.children('option[value="' + type + '"]').attr('selected','selected');
+
+            if(taxCategoryPercentMap[$assignedTaxCategory.val()] == null) {
+                $inputTaxAmount.removeAttr('readonly');
+            } else {
+                $inputTaxAmount.prop('readonly', true);
+            }
+
+            $.each(taxCategoryMap[type], function(index, value) {
+                if($assignedTaxCategory.val() === value) {
+                    $taxCategoryDropdown.append($("<option></option>")
+                        .attr("value", value).attr('selected', 'selected').text(taxCategoryTextMap[value]));
+                } else {
+                    $taxCategoryDropdown.append($("<option></option>")
+                        .attr("value", value).text(taxCategoryTextMap[value]));
+                }
+            });
+
+            calculateTotalValues();
+        }
+
+        function calculateTotalValues () {
+            var totalFinalValue = 0;
+            var totalNetValue = calculateTotalClassValues('.item-net-value');
+            assignTaxValues(totalNetValue);
+            var includeVat = $('#inputVatExemptionType').val() === '';
+
+            // assignVatValues();
+            var totalTaxValue = calculateTotalClassValues('.tax-value');
+            var totalVatValue = calculateTotalClassValues('.item-vat-value');
+            totalFinalValue = Number(totalNetValue) - Number(totalTaxValue)
+            if(includeVat)
+                totalFinalValue += Number(totalVatValue);
+
+            $('#totalNetValue').val(totalNetValue);
+            $('#totalVatValue').val(totalVatValue);
+            $('#totalTaxValue').val(totalTaxValue);
+            $('#totalFinalValue').val(totalFinalValue);
         }
 
         function calculateTotalClassValues (className) {
@@ -399,14 +537,50 @@
             return formatToAmount(sum);
         }
 
+        //currently not used
+        function assignTaxValues (totalNetValue) {
+            var taxElements = $('.tax-value');
+
+            for (var i = 0; i < taxElements.length; i++) {
+                var parentElement = $(taxElements[i]).parents('.card-body').first();
+                var taxCategory = $(parentElement).find('[id^=inputTaxCategory]').val();
+                var taxPercent = taxCategoryPercentMap[taxCategory];
+                if(taxPercent != null) {
+                    var taxValue = formatToAmount((Number(taxPercent)/100) * totalNetValue);
+                    $(taxElements[i]).val(taxValue)
+                }
+            }
+        }
+
+        function assignVatValues () {
+            var vatElements = $('.item-vat-value');
+
+            if($('#inputVatExemptionType').val() !== '') {
+                for (var i = 0; i < vatElements.length; i++) {
+                    var parentElement = $(vatElements[i]).parents('.card-body').first();
+                    $(parentElement).find('[id^=inputItemVatValue]').val(0);
+                    $(parentElement).find('[id^=inputItemFinalValue]').val(
+                        $(parentElement).find('[id^=inputItemNetValue]').val()
+                    );
+                }
+            }
+
+        }
+
         function formatToAmount (amount) {
             return (Math.round(amount * 100) / 100).toFixed(2)
         }
 
-        // jQuery
         function replaceDocumentItems (html) {
-            // Replace the <fieldset id="items"> with a new one returned by server.
             $('#documentItems').replaceWith($(html));
+            $('.select2').select2();
+            calculateTotalValues()
+        }
+
+        function replaceDocumentTaxes (html) {
+            $('#documentTaxes').replaceWith($(html));
+            $('.select2').select2();
+            initiateDocumentTaxes()
             calculateTotalValues()
         }
 
@@ -417,12 +591,33 @@
             $.post('/document/item', data, replaceDocumentItems);
         });
 
-
         $( "body" ).on("click", 'button[name="removeItem"]', function( event ) {
             event.preventDefault();
             var data = $('form').serialize();
             data += '&removeItem=' + $(this).val();
             $.post('/document/item', data, replaceDocumentItems);
+        });
+
+        $( "body" ).on("click", 'button[name="addTax"]', function( event ) {
+            event.preventDefault();
+            var data = $('form').serialize();
+            data += '&addTax';
+            $.post('/document/tax', data, replaceDocumentTaxes);
+        });
+
+        $( "body" ).on("click", 'button[name="removeTax"]', function( event ) {
+            event.preventDefault();
+            var data = $('form').serialize();
+            data += '&removeTax=' + $(this).val();
+            $.post('/document/tax', data, replaceDocumentTaxes);
+        });
+
+        $('#inputVatExemptionType').change(function () {
+            calculateTotalValues()
+        });
+
+        $('.tax-value').change(function () {
+            calculateTotalValues()
         });
 
     </script>

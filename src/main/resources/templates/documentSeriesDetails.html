@@ -56,7 +56,7 @@
                                     <div class="form-group row">
                                         <label for="inputAadeInvoiceCategory" class="col-sm-2 col-form-label" th:text="#{aade.invoice.category.field}">Aade Invoice Category</label>
                                         <div class="col-sm-10">
-                                            <select id="inputAadeInvoiceCategory" class="custom-select">
+                                            <select id="inputAadeInvoiceCategory" class="custom-select select2">
                                                 <option th:value="${null}" th:text="#{dropdown.select}"></option>
                                                 <option th:each="invoiceCategory : ${T(gr.aueb.dmst.simplinvoice.enums.AadeInvoiceType$AadeInvoiceTypeCategory).values()}"
                                                         th:value="${invoiceCategory}" th:text="#{'aade.invoice.category.' + ${invoiceCategory}}">option 1</option>
@@ -66,7 +66,7 @@
                                     <div class="form-group row">
                                         <label for="inputAadeInvoiceType" class="col-sm-2 col-form-label" th:text="#{aade.invoice.type.field}">Aade Invoice Type</label>
                                         <div class="col-sm-10">
-                                            <select id="inputAadeInvoiceType" class="custom-select" name="aadeInvoiceType">
+                                            <select id="inputAadeInvoiceType" class="custom-select select2" name="aadeInvoiceType">
                                                 <option th:value="${null}" th:text="#{dropdown.select}"></option>
                                                 <option th:each="invoiceType : ${T(gr.aueb.dmst.simplinvoice.enums.AadeInvoiceType).values()}"
                                                         th:selected="${invoiceType.equals(documentSeries.aadeInvoiceType)}"
@@ -103,6 +103,11 @@
     <th:block th:fragment="pageCustomScript">
 
         <script th:inline="javascript">
+            $(function () {
+                //Initialize Select2 Elements
+                $('.select2').select2()
+            });
+
             var invoiceTypeMap = /*[[${T(gr.aueb.dmst.simplinvoice.Constants).aadeInvoiceTypeMap}]]*/;
             var $invoiceCategoryDropdown = $("#inputAadeInvoiceCategory");
             var $invoiceTypeDropdown = $("#inputAadeInvoiceType");
