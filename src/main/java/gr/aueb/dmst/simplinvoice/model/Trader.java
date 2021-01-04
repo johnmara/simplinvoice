@@ -1,5 +1,6 @@
 package gr.aueb.dmst.simplinvoice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import gr.aueb.dmst.simplinvoice.enums.*;
 
 import javax.persistence.*;
@@ -20,8 +21,12 @@ public class Trader {
     private String name;
     @NotEmpty
     private String afm;
-    private String address;
     private String country;
+    private String street;
+    private int streetNumber;
+    private String town;
+    private String postalCode;
+    private int branch;
     private String phoneNumber;
     private String email;
     private String taxOffice;
@@ -30,6 +35,7 @@ public class Trader {
 
     @ManyToOne
     @JoinColumn(name = "company_profile_id", referencedColumnName = "id")
+    @JsonIgnore
     private CompanyProfile companyProfile;
 
     public Long getId() {
@@ -70,14 +76,6 @@ public class Trader {
 
     public void setAfm(String afm) {
         this.afm = afm;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getCountry() {
@@ -134,5 +132,45 @@ public class Trader {
 
     public void setBankBic(String bankBic) {
         this.bankBic = bankBic;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public int getStreetNumber() {
+        return streetNumber;
+    }
+
+    public void setStreetNumber(int streetNumber) {
+        this.streetNumber = streetNumber;
+    }
+
+    public String getTown() {
+        return town;
+    }
+
+    public void setTown(String town) {
+        this.town = town;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public int getBranch() {
+        return branch;
+    }
+
+    public void setBranch(int branch) {
+        this.branch = branch;
     }
 }

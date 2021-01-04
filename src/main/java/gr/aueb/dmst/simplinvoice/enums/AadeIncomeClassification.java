@@ -15,9 +15,9 @@ public enum AadeIncomeClassification {
     AADE_INC_CLASS_195("195");
 
 
-    public final String value;
+    public final String aadeCode;
 
-    private AadeIncomeClassification(String value) {
-        this.value = value;
+    private AadeIncomeClassification(String aadeCode) {
+        this.aadeCode = aadeCode;
     }
 }

@@ -3,7 +3,6 @@ package gr.aueb.dmst.simplinvoice.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.util.List;
 
 @Entity
 public class CompanyProfile {
@@ -21,7 +20,12 @@ public class CompanyProfile {
     @NotEmpty(message = "{messages.not.empty.field}") //instead of using dto
     private String afm;
     private String taxOffice;
-    private String address;
+    private String country;
+    private String street;
+    private int streetNumber;
+    private String town;
+    private String postalCode;
+    private int branch;
     private String phoneNumber;
     private String email;
 
@@ -65,14 +69,6 @@ public class CompanyProfile {
         this.taxOffice = taxOffice;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -89,17 +85,51 @@ public class CompanyProfile {
         this.email = email;
     }
 
-    @Override
-    public String toString() {
-        return "CompanyProfile{" +
-                "id=" + id +
-                ", companyName='" + companyName + '\'' +
-                ", afm='" + afm + '\'' +
-                ", taxOffice='" + taxOffice + '\'' +
-                ", address='" + address + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+    public String getStreet() {
+        return street;
     }
 
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public int getStreetNumber() {
+        return streetNumber;
+    }
+
+    public void setStreetNumber(int streetNumber) {
+        this.streetNumber = streetNumber;
+    }
+
+    public String getTown() {
+        return town;
+    }
+
+    public void setTown(String town) {
+        this.town = town;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public int getBranch() {
+        return branch;
+    }
+
+    public void setBranch(int branch) {
+        this.branch = branch;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
 }

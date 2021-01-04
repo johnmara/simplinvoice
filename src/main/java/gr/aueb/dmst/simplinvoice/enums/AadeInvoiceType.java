@@ -53,11 +53,11 @@ public enum AadeInvoiceType {
     AADE_INV_TYPE_17_5("17.5", CAT_17),
     AADE_INV_TYPE_17_6("17.6", CAT_17);
 
-    public final String code;
+    public final String aadeCode;
     public final AadeInvoiceTypeCategory category;
 
-    private AadeInvoiceType(String code, AadeInvoiceTypeCategory category) {
-        this.code = code;
+    private AadeInvoiceType(String aadeCode, AadeInvoiceTypeCategory category) {
+        this.aadeCode = aadeCode;
         this.category = category;
     }
 

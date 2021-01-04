@@ -1,5 +1,7 @@
 package gr.aueb.dmst.simplinvoice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import gr.aueb.dmst.simplinvoice.enums.AadeIncomeClassification;
 import gr.aueb.dmst.simplinvoice.enums.MaterialType;
 import gr.aueb.dmst.simplinvoice.enums.MeasurementUnit;
@@ -23,6 +25,9 @@ public class Material {
     private String description;
     @Enumerated(EnumType.STRING)
     private VatCategory vatCategory;
+    @Transient
+    @JsonInclude()
+    private BigDecimal vatPercent;
     @Enumerated(EnumType.STRING)
     private MeasurementUnit measurementUnit;
     @Enumerated(EnumType.STRING)
@@ -32,6 +37,7 @@ public class Material {
 
     @ManyToOne
     @JoinColumn(name = "company_profile_id", referencedColumnName = "id")
+    @JsonIgnore
     private CompanyProfile companyProfile;
 
     public Long getId() {
@@ -112,5 +118,9 @@ public class Material {
 
     public void setCompanyProfile(CompanyProfile companyProfile) {
         this.companyProfile = companyProfile;
+    }
+
+    public BigDecimal getVatPercent() {
+        return this.vatCategory != null ? this.vatCategory.value : null;
     }
 }
