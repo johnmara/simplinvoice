@@ -87,7 +87,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="inputBranch" class="col-sm-2 col-form-label" th:text="#{branch.field}">Postal Code</label>
+                                        <label for="inputBranch" class="col-sm-2 col-form-label" th:text="#{branch.field}">Branch</label>
                                         <div class="col-sm-10">
                                             <input type="number" class="form-control" id="inputBranch" th:placeholder="#{branch.field}" th:field="*{branch}">
                                         </div>
@@ -95,10 +95,10 @@
                                     <div class="form-group row">
                                         <label for="inputCountry" class="col-sm-2 col-form-label" th:text="#{country.field}">Country</label>
                                         <div class="col-sm-10">
-                                            <select id="inputCountry" class="form-control select2" required name="country">
+                                            <select id="inputCountry" class="form-control select2" required th:field="*{country}">
                                                 <option th:value="${null}" th:text="#{dropdown.select}"></option>
                                                 <option th:each="entry : ${T(gr.aueb.dmst.simplinvoice.Constants).countries}"
-                                                        th:selected="${entry.key.equals(trader.country)}"
+                                                        th:selected="${entry.key.equals(companyProfile.country)}"
                                                         th:value="${entry.key}" th:text="${entry.value}">option 1</option>
                                             </select>
                                         </div>

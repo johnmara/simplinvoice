@@ -10,7 +10,7 @@ public class DocumentItem {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
-    private int lineNumber;
+    private Integer lineNumber;
     private BigDecimal quantity;
     private BigDecimal discountValue; //xwris fpa
     private BigDecimal netValue;
@@ -33,11 +33,11 @@ public class DocumentItem {
         this.id = id;
     }
 
-    public int getLineNumber() {
+    public Integer getLineNumber() {
         return lineNumber;
     }
 
-    public void setLineNumber(int lineNumber) {
+    public void setLineNumber(Integer lineNumber) {
         this.lineNumber = lineNumber;
     }
 

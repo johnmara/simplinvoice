@@ -8,6 +8,7 @@ import gr.aueb.dmst.simplinvoice.enums.DocumentType;
 import gr.aueb.dmst.simplinvoice.model.DocumentHeader;
 import gr.aueb.dmst.simplinvoice.model.DocumentItem;
 import gr.aueb.dmst.simplinvoice.model.DocumentTax;
+import gr.aueb.dmst.simplinvoice.model.Material;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,10 @@ public class DocumentService {
 
     @Autowired
     DocumentSeriesRepository documentSeriesRepository;
+
+    public DocumentHeader getDocumentHeaderById(Long id, Long companyProfileId) {
+        return documentHeaderRepository.findDocumentHeaderByIdAndCompanyProfileId(id, companyProfileId);
+    }
 
     public List<DocumentHeader> getDocumentsList(DocumentType documentType, Long companyProfileId) {
         return documentHeaderRepository.findAllByTypeAndCompanyProfileId(documentType, companyProfileId);

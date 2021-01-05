@@ -54,15 +54,23 @@ public class DocumentViewController extends AbstractViewController {
         return getModelAndView("documentsList", model);
     }
 
-    @GetMapping(value = "/issue")
+    @GetMapping(value = {"/issue/", "/issue/{id}"})
     String getTrader(@PathVariable(required = false) Long id, WebRequest request, final Model model) {
         Long companyProfileId = Utils.getUserFromWebRequest(request).getCompanyProfile().getId();
 
-        DocumentHeader documentHeader = new DocumentHeader();
-        documentHeader.setDate(new Date());
-        documentHeader.setDocumentItems(new ArrayList<>());
-        documentHeader.getDocumentItems().add(new DocumentItem());
-        documentHeader.setDocumentTaxes(new ArrayList<>());
+        DocumentHeader documentHeader;
+
+        if(id != null) {
+            documentHeader = documentService.getDocumentHeaderById(id, companyProfileId);
+        } else {
+            documentHeader = new DocumentHeader();
+            documentHeader.setDate(new Date());
+            documentHeader.setCurrency("EUR");
+            documentHeader.setDocumentItems(new ArrayList<>());
+            DocumentItem documentItem = new DocumentItem();
+            documentHeader.getDocumentItems().add(documentItem);
+            documentHeader.setDocumentTaxes(new ArrayList<>());
+        }
 
         List<Trader> tradersList = traderService.getTradersList(TraderType.CUSTOMER, companyProfileId);
         List<Material> materialsList = materialService.getMaterialsList(companyProfileId);
@@ -85,16 +93,8 @@ public class DocumentViewController extends AbstractViewController {
         documentHeader.setCompanyProfile(Utils.getUserFromHttpServletRequest(request).getCompanyProfile());
         documentHeader.setType(DocumentType.ISSUED);
 
-        try {
-            documentService.addDocumentHeader(documentHeader);
-        } catch (DataIntegrityViolationException ex) {
-            documentHeader.setId(null);
-            model.addAttribute("modelError", messageSource.getMessage("document.code.already.exists", null, request.getLocale()));
-            return getModelAndView("traderDetails", model);
-        }
-
         redirectAttributes.addAttribute("type", documentHeader.getType());
-        return addSuccessMessageAndRedirect("/documentHeader/list", messageSource.getMessage("document.added.success", null, request.getLocale()), redirectAttributes);
+        return addSuccessMessageAndRedirect("/document/list", messageSource.getMessage("document.added.success", null, request.getLocale()), redirectAttributes);
     }
 
     @PostMapping(params = "addItem", path = {"/item", "/item/{id}"})

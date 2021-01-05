@@ -25,6 +25,7 @@ public class Material {
     private String description;
     @Enumerated(EnumType.STRING)
     private VatCategory vatCategory;
+    private Boolean acquired;
     @Transient
     @JsonInclude()
     private BigDecimal vatPercent;
@@ -122,5 +123,17 @@ public class Material {
 
     public BigDecimal getVatPercent() {
         return this.vatCategory != null ? this.vatCategory.value : null;
+    }
+
+    public Boolean getAcquired() {
+        return acquired;
+    }
+
+    public void setAcquired(Boolean acquired) {
+        this.acquired = acquired;
+    }
+
+    public void setVatPercent(BigDecimal vatPercent) {
+        this.vatPercent = vatPercent;
     }
 }

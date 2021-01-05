@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <title th:fragment="title" th:text="#{app.title} + ' | ' +
+                                        (${type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED} ? #{document.issue.list.page.title} : #{document.received.list.page.title})"></title>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" th:fragment="container">
+
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 th:text="${type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED} ? #{document.issue.list.page.title} : #{document.received.list.page.title}">DataTables</h1>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title" th:text="#{list.all}"></h3>
+                                <div class="card-tools">
+                                    <a class="btn btn-default btn-sm" th:href="${type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED} ? @{/document/issue/} : @{/document/receive/}"><i class="fas fa-plus"></i></a>
+                                </div>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <table id="documentsList" class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th th:text="#{document.list.document.number}">Document number</th>
+                                            <th th:text="#{document.list.document.date}">Date</th>
+                                            <th th:text="#{document.list.document.counterpart}">Counterpart</th>
+                                            <th th:text="#{document.list.document.final.total.value}">Total Value</th>
+                                            <th th:text="#{document.list.document.aade.mark}">MARK</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="document, iStat: ${documentsList}">
+                                            <td th:text="${document.id}"></td>
+                                            <td th:text="${document.documentSeries.code + '-' + document.number}"></td>
+                                            <td th:text="${#dates.format(document.date, 'dd/MM/yyyy')}"></td>
+                                            <td th:text="${document.counterPart.name}"></td>
+                                            <td th:text="${document.totalFinalValue}"></td>
+                                            <td th:text="${document.mark}"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+
+    </div>
+    <!-- /.content-wrapper -->
+
+    <th:block th:fragment="pageCustomScript">
+
+        <script th:inline="javascript">
+            var documentIssue = [[${type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED}]];
+            var documentIssuePath = /*[[@{/document/issue/}]]*/;
+            var documentReceivePath = /*[[@{/document/receive/}]]*/;
+            var context =documentIssue ? documentIssuePath : documentReceivePath;
+
+            $(function () {
+                $("#documentsList").DataTable({
+                    "responsive": true,
+                    "lengthChange": false,
+                    "autoWidth": false,
+                    "buttons": [{ extend: 'csvHtml5'}, { extend: 'excelHtml5'}],
+                    "columnDefs": [
+                        {
+                            "targets": 0,
+                            "visible": false,
+                            "searchable": false
+                        },
+                        {
+                            "targets": 1,
+                            "render": function ( data, type, row, meta ) {
+                                return '<a href="'+ context + row[0] +'" target="_blank">' + data + '</a>';
+                        }
+                    } ]
+                }).buttons().container().appendTo('#documentsList_wrapper .col-md-6:eq(0)');
+            });
+        </script>
+
+    </th:block>
+
+
+</html>

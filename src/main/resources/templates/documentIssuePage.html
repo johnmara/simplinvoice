@@ -30,6 +30,7 @@
 
                     <!-- Horizontal Form -->
                     <form id="createForm" class="form-horizontal" th:action="@{/document/issue/save}" th:object="${documentHeader}" method="post">
+                        <input type="hidden" th:field="*{id}" id="documentHeaderid">
 
                         <!-- Invoice Info  -->
                         <div class="card card-primary">
@@ -42,8 +43,8 @@
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <div class="form-group">
-                                            <label th:for="inputDocumentSeries" th:text="#{document.issue.invoice.series}">Series</label>
-                                            <select id="inputDocumentSeries" class="form-control select2" required name="documentSeries">
+                                            <label th:for="inputDocumentSeries" th:text="#{document.issue.invoice.series} + '*'">Series</label>
+                                            <select id="inputDocumentSeries" class="form-control select2" required th:field="*{documentSeries}">
                                                 <option th:value="${null}" th:text="#{dropdown.select}"></option>
                                                 <option th:each="documentSeries : ${documentSeriesList}"
                                                         th:attr="data-documentSeriesLastNumber=${documentSeries.lastNumber}"
@@ -53,13 +54,13 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <div class="form-group">
-                                            <label th:for="inputDocumentNumber" th:text="#{document.issue.invoice.number}">Country</label>
+                                            <label th:for="inputDocumentNumber" th:text="#{document.issue.invoice.number}">Number</label>
                                             <input type="number" class="form-control" th:id="inputDocumentNumber" th:placeholder="#{document.issue.invoice.number}" readonly th:field="*{number}">
                                         </div>
                                     </div>
                                     <div class="col-sm-4">
                                         <div class="form-group">
-                                            <label th:text="#{document.issue.date}">Date</label>
+                                            <label th:text="#{document.issue.date} + '*'">Date</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
@@ -73,8 +74,8 @@
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <div class="form-group">
-                                            <label th:for="inputPaymentMethod" th:text="#{document.issue.payment.method}">Payment Method</label>
-                                            <select id="inputPaymentMethod" class="form-control select2" required name="paymentMethod">
+                                            <label th:for="inputPaymentMethod" th:text="#{document.issue.payment.method}  + '*'">Payment Method</label>
+                                            <select id="inputPaymentMethod" class="form-control select2" required th:field="*{paymentMethod}">
                                                 <option th:value="${null}" th:text="#{dropdown.select}"></option>
                                                 <option th:each="paymentMethod : ${T(gr.aueb.dmst.simplinvoice.enums.DocumentPaymentMethod).values()}"
                                                         th:value="${paymentMethod}" th:text="#{'payment.method.' + ${paymentMethod.name()}}">option 1</option>
@@ -84,7 +85,7 @@
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label th:for="inputVatExemptionType" th:text="#{document.issue.vat.exemption.type}">Payment Method</label>
-                                            <select id="inputVatExemptionType" class="form-control select2" name="vatExemptionType">
+                                            <select id="inputVatExemptionType" class="form-control select2" th:field="*{vatExemptionType}">
                                                 <option th:value="${null}" th:text="#{document.issue.vat.exemption.type.none}"></option>
                                                 <option th:each="vatExemptionType : ${T(gr.aueb.dmst.simplinvoice.enums.VatExemptionType).values()}"
                                                         th:value="${vatExemptionType}" th:text="#{'aade.vat.exemption.' + ${vatExemptionType.name()}}">option 1</option>
@@ -93,7 +94,7 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <div class="form-group">
-                                            <label th:for="inputCurrency" th:text="#{document.issue.currency}">Payment Method</label>
+                                            <label th:for="inputCurrency" th:text="#{document.issue.currency}">Currency</label>
                                             <input type="text" id="inputCurrency" class="form-control" maxlength="3" required th:field="*{currency}">
                                         </div>
                                     </div>
@@ -176,7 +177,7 @@
                             <div class="card-body">
                                 <div class="form-group row">
                                     <div class="col-sm-10">
-                                        <select id="inputCounterPart" class="form-control select2" required name="counterPart">
+                                        <select id="inputCounterPart" class="form-control select2" required th:field="*{counterPart}">
                                             <option th:value="${null}" th:text="#{dropdown.select}"></option>
                                             <option th:each="trader : ${tradersList}"
                                                     th:value="${trader.id}" th:text="${trader.code + ' - ' + trader.name}">option 1</option>
@@ -187,13 +188,13 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="counterPartEmail" th:text="#{email.field}">Email</label>
-                                            <input type="email" class="form-control" id="counterPartEmail" th:placeholder="#{email.field}" readonly>
+                                            <input type="email" class="form-control" id="counterPartEmail" th:placeholder="#{email.field}" readonly th:value="${documentHeader.counterPart.email}">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="counterPartName" th:text="#{trader.name.field}">Email</label>
-                                            <input type="text" class="form-control" id="counterPartName" th:placeholder="#{trader.name.field}" readonly>
+                                            <label for="counterPartName" th:text="#{trader.name.field}">Name</label>
+                                            <input type="text" class="form-control" id="counterPartName" th:placeholder="#{trader.name.field}" readonly th:value="${documentHeader.counterPart.name}">
                                         </div>
                                     </div>
                                 </div>
@@ -212,7 +213,7 @@
                                 <div class="row d-flex align-items-stretch">
                                     <div class="col-12 align-items-stretch" th:each="documentItem, itemStat: ${documentHeader.documentItems}">
                                         <div class="card bg-light">
-                                            <input type="hidden" th:value="${itemStat.index + 1}" th:field="${documentHeader.documentItems[__${itemStat.index}__].lineNumber}">
+                                            <input type="hidden" th:value="${itemStat.index + 1}" th:name="|documentItems[__${itemStat.index}__].lineNumber|">
                                             <div class="card-header text-muted border-bottom-0" th:inline="text">
                                                 [[${'#' + (itemStat.index + 1)}]]
                                             </div>
@@ -229,7 +230,7 @@
                                                 <div class="row">
                                                     <div class="col-sm-3">
                                                         <div class="form-group">
-                                                            <label th:for="'inputItemQuantity' + ${itemStat.index}" th:text="#{document.issue.material.quantity.select}">Country</label>
+                                                            <label th:for="'inputItemQuantity' + ${itemStat.index}" th:text="#{document.issue.material.quantity.select} + '*'">Country</label>
                                                             <input type="number" class="form-control" th:id="'inputItemQuantity' + ${itemStat.index}" th:placeholder="#{document.issue.material.quantity.select}" required th:field="${documentHeader.documentItems[__${itemStat.index}__].quantity}">
                                                         </div>
                                                     </div>

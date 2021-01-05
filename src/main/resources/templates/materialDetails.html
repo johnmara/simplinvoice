@@ -46,6 +46,15 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label"></label>
+                                        <div class="col-sm-10">
+                                            <div class="custom-control custom-checkbox">
+                                                <input class="custom-control-input" type="checkbox" id="customCheckbox2" th:field="*{acquired}">
+                                                <label for="customCheckbox2" class="custom-control-label" th:text="#{material.acquired}">Acquired</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
                                         <label for="inputCode" class="col-sm-2 col-form-label" th:text="#{material.code.field}">Code</label>
                                         <div class="col-sm-10">
                                             <input type="text" class="form-control" id="inputCode" th:placeholder="#{material.code.field}" required th:field="*{code}">
@@ -90,17 +99,17 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <label for="inputWholesalePrice" class="col-sm-2 col-form-label" th:text="#{material.wholesale.price}">Wholesale Price</label>
-                                        <div class="col-sm-10">
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">€</span>
-                                                </div>
-                                                <input id="inputWholesalePrice" type="number" step=".01" class="form-control" th:field="*{wholesalePrice}">
-                                            </div>
-                                        </div>
-                                    </div>
+<!--                                    <div class="form-group row">-->
+<!--                                        <label for="inputWholesalePrice" class="col-sm-2 col-form-label" th:text="#{material.wholesale.price}">Wholesale Price</label>-->
+<!--                                        <div class="col-sm-10">-->
+<!--                                            <div class="input-group">-->
+<!--                                                <div class="input-group-prepend">-->
+<!--                                                    <span class="input-group-text">€</span>-->
+<!--                                                </div>-->
+<!--                                                <input id="inputWholesalePrice" type="number" step=".01" class="form-control" th:field="*{wholesalePrice}">-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
                                     <div class="form-group row">
                                         <label for="inputRetailPrice" class="col-sm-2 col-form-label" th:text="#{material.retail.price}">Retail Price</label>
                                         <div class="col-sm-10">

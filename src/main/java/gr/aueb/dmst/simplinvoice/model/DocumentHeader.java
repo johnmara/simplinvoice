@@ -32,7 +32,6 @@ public class DocumentHeader {
     private String currency;
     private String notes;
     private BigDecimal totalNetValue;
-    private BigDecimal totalDiscountValue;
     private BigDecimal totalVatValue;
     private BigDecimal totalTaxValue;
     private BigDecimal totalFinalValue;
@@ -129,14 +128,6 @@ public class DocumentHeader {
 
     public void setTotalNetValue(BigDecimal totalNetValue) {
         this.totalNetValue = totalNetValue;
-    }
-
-    public BigDecimal getTotalDiscountValue() {
-        return totalDiscountValue;
-    }
-
-    public void setTotalDiscountValue(BigDecimal totalDiscountValue) {
-        this.totalDiscountValue = totalDiscountValue;
     }
 
     public BigDecimal getTotalVatValue() {
