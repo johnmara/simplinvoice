@@ -55,7 +55,7 @@ public class DocumentViewController extends AbstractViewController {
     }
 
     @GetMapping(value = {"/issue/", "/issue/{id}"})
-    String getTrader(@PathVariable(required = false) Long id, WebRequest request, final Model model) {
+    String getDocument(@PathVariable(required = false) Long id, WebRequest request, final Model model) {
         Long companyProfileId = Utils.getUserFromWebRequest(request).getCompanyProfile().getId();
 
         DocumentHeader documentHeader;
@@ -83,8 +83,19 @@ public class DocumentViewController extends AbstractViewController {
         return getModelAndView("documentIssuePage", model);
     }
 
+    @GetMapping(value = "/issue/summary/{id}")
+    String getTrader(@PathVariable Long id, WebRequest request, final Model model) {
+        Long companyProfileId = Utils.getUserFromWebRequest(request).getCompanyProfile().getId();
+
+        DocumentHeader documentHeader = documentService.getDocumentHeaderById(id, companyProfileId);
+
+        model.addAttribute("documentHeader", documentHeader);
+
+        return getModelAndView("documentSummary", model);
+    }
+
     @PostMapping(value = "/issue/save")
-    String saveTrader(
+    String saveDocument(
             @ModelAttribute("documentHeader") @Valid DocumentHeader documentHeader, Errors errors, Model model, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 
         if(errors.hasErrors())
@@ -92,6 +103,8 @@ public class DocumentViewController extends AbstractViewController {
 
         documentHeader.setCompanyProfile(Utils.getUserFromHttpServletRequest(request).getCompanyProfile());
         documentHeader.setType(DocumentType.ISSUED);
+
+        documentService.addDocumentHeader(documentHeader);
 
         redirectAttributes.addAttribute("type", documentHeader.getType());
         return addSuccessMessageAndRedirect("/document/list", messageSource.getMessage("document.added.success", null, request.getLocale()), redirectAttributes);

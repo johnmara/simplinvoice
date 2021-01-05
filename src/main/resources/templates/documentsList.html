@@ -40,6 +40,7 @@
                                             <th th:text="#{document.list.document.counterpart}">Counterpart</th>
                                             <th th:text="#{document.list.document.final.total.value}">Total Value</th>
                                             <th th:text="#{document.list.document.aade.mark}">MARK</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -50,6 +51,7 @@
                                             <td th:text="${document.counterPart.name}"></td>
                                             <td th:text="${document.totalFinalValue}"></td>
                                             <td th:text="${document.mark}"></td>
+                                            <td></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -76,7 +78,10 @@
             var documentIssue = [[${type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED}]];
             var documentIssuePath = /*[[@{/document/issue/}]]*/;
             var documentReceivePath = /*[[@{/document/receive/}]]*/;
-            var context =documentIssue ? documentIssuePath : documentReceivePath;
+            var editUrl = documentIssue ? documentIssuePath : documentReceivePath;
+
+            var iconForSummary = '<i class="fas fa-file-alt"></i>';
+            var summaryUrl = /*[[@{/document/issue/summary/}]]*/;
 
             $(function () {
                 $("#documentsList").DataTable({
@@ -93,9 +98,17 @@
                         {
                             "targets": 1,
                             "render": function ( data, type, row, meta ) {
-                                return '<a href="'+ context + row[0] +'" target="_blank">' + data + '</a>';
+                                return '<a href="'+ editUrl + row[0] +'">' + data + '</a>';
+                            }
+                        },
+                        {
+                            "targets": 6,
+                            "searchable": false,
+                            "render": function ( data, type, row, meta ) {
+                                return '<a href="'+ summaryUrl + row[0] +'" target="_blank">' + iconForSummary + '</a>';
+                            }
                         }
-                    } ]
+                    ]
                 }).buttons().container().appendTo('#documentsList_wrapper .col-md-6:eq(0)');
             });
         </script>

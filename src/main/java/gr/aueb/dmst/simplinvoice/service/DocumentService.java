@@ -12,6 +12,7 @@ import gr.aueb.dmst.simplinvoice.model.Material;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 
@@ -38,22 +39,33 @@ public class DocumentService {
         return documentHeaderRepository.findAllByTypeAndCompanyProfileId(documentType, companyProfileId);
     }
 
+    @Transactional
     public DocumentHeader addDocumentHeader(DocumentHeader documentHeader) {
-        documentHeader.getDocumentSeries().setLastNumber(documentHeader.getNumber());
-        documentSeriesRepository.save(documentHeader.getDocumentSeries());
+        updateDocumentSeriesNumber(documentHeader);
         documentHeader.setReceivedDateTime(new Date());
+        if(documentHeader.getId() != null) { //update
+            documentItemRepository.deleteAllByDocumentHeader(documentHeader);
+            documentTaxRepository.deleteAllByDocumentHeaderId(documentHeader.getId());
+        }
+
         documentHeader = documentHeaderRepository.save(documentHeader);
 
         for(DocumentItem item: documentHeader.getDocumentItems()) {
             item.setDocumentHeader(documentHeader);
             documentItemRepository.save(item);
         }
-        for(DocumentTax tax: documentHeader.getDocumentTaxes()) {
-            tax.setDocumentHeader(documentHeader);
-            documentTaxRepository.save(tax);
-        }
+        if (documentHeader.getDocumentTaxes() != null)
+            for(DocumentTax tax: documentHeader.getDocumentTaxes()) {
+                tax.setDocumentHeader(documentHeader);
+                documentTaxRepository.save(tax);
+            }
 
-        return documentHeaderRepository.save(documentHeader);
+        return documentHeader;
+    }
+
+    void updateDocumentSeriesNumber(DocumentHeader documentHeader) {
+        documentHeader.getDocumentSeries().setLastNumber(documentHeader.getNumber());
+        documentSeriesRepository.save(documentHeader.getDocumentSeries());
     }
 
 }

@@ -188,13 +188,13 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="counterPartEmail" th:text="#{email.field}">Email</label>
-                                            <input type="email" class="form-control" id="counterPartEmail" th:placeholder="#{email.field}" readonly th:value="${documentHeader.counterPart.email}">
+                                            <input type="email" class="form-control" id="counterPartEmail" th:placeholder="#{email.field}" readonly th:value="${documentHeader.counterPart?.email}">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="counterPartName" th:text="#{trader.name.field}">Name</label>
-                                            <input type="text" class="form-control" id="counterPartName" th:placeholder="#{trader.name.field}" readonly th:value="${documentHeader.counterPart.name}">
+                                            <input type="text" class="form-control" id="counterPartName" th:placeholder="#{trader.name.field}" readonly th:value="${documentHeader.counterPart?.name}">
                                         </div>
                                     </div>
                                 </div>

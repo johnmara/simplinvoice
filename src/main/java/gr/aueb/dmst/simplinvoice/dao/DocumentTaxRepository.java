@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DocumentTaxRepository extends JpaRepository<DocumentTax, Long> {
 
+    public void deleteAllByDocumentHeaderId(Long id);
+
 }
