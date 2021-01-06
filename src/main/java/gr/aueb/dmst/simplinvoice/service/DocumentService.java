@@ -1,5 +1,10 @@
 package gr.aueb.dmst.simplinvoice.service;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import gr.aueb.dmst.simplinvoice.Utils;
 import gr.aueb.dmst.simplinvoice.dao.DocumentHeaderRepository;
 import gr.aueb.dmst.simplinvoice.dao.DocumentItemRepository;
 import gr.aueb.dmst.simplinvoice.dao.DocumentSeriesRepository;
@@ -8,11 +13,12 @@ import gr.aueb.dmst.simplinvoice.enums.DocumentType;
 import gr.aueb.dmst.simplinvoice.model.DocumentHeader;
 import gr.aueb.dmst.simplinvoice.model.DocumentItem;
 import gr.aueb.dmst.simplinvoice.model.DocumentTax;
-import gr.aueb.dmst.simplinvoice.model.Material;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.awt.image.BufferedImage;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -35,8 +41,15 @@ public class DocumentService {
         return documentHeaderRepository.findDocumentHeaderByIdAndCompanyProfileId(id, companyProfileId);
     }
 
-    public DocumentHeader getDocumentHeaderPublic(Long id) {
-        return documentHeaderRepository.findDocumentHeaderById(id);
+    public DocumentHeader getDocumentHeaderPublic(String authenticationCode, String appUrl) throws Exception {
+        DocumentHeader documentHeader = documentHeaderRepository.findDocumentHeaderByAuthenticationCode(authenticationCode);
+
+        BufferedImage bufferedImage = generateQRCodeImage(authenticationCode, appUrl);
+
+        String bytesBase64 = Base64.getEncoder().encodeToString(Utils.toByteArray(bufferedImage, "png"));
+        documentHeader.setQrCodeValue(bytesBase64);
+
+        return documentHeader;
     }
 
 
@@ -46,9 +59,11 @@ public class DocumentService {
 
     @Transactional
     public DocumentHeader addDocumentHeader(DocumentHeader documentHeader) {
+        boolean isNewEntry = documentHeader.getId() == null;
+
         updateDocumentSeriesNumber(documentHeader);
         documentHeader.setReceivedDateTime(new Date());
-        if(documentHeader.getId() != null) { //update
+        if(!isNewEntry) {
             documentItemRepository.deleteAllByDocumentHeader(documentHeader);
             documentTaxRepository.deleteAllByDocumentHeaderId(documentHeader.getId());
         }
@@ -65,12 +80,33 @@ public class DocumentService {
                 documentTaxRepository.save(tax);
             }
 
+        if(isNewEntry) {
+            sendToMyData(documentHeader);
+        }
+
         return documentHeader;
     }
 
     void updateDocumentSeriesNumber(DocumentHeader documentHeader) {
         documentHeader.getDocumentSeries().setLastNumber(documentHeader.getNumber());
         documentSeriesRepository.save(documentHeader.getDocumentSeries());
+    }
+
+    public void sendToMyData(DocumentHeader documentHeader) {
+        documentHeader.setMark(Utils.generateMockMyDataMark());
+        documentHeader.setUid(Utils.createMyDataUid(documentHeader));
+        documentHeader.setAuthenticationCode(Utils.createMyDataAuthenticationCode(documentHeader));
+
+        documentHeaderRepository.save(documentHeader);
+    }
+
+    public BufferedImage generateQRCodeImage(String authenticationCode, String appUrl) throws Exception {
+        String value = appUrl + "/document/issue/summary/public/" + authenticationCode;
+
+        QRCodeWriter barcodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix = barcodeWriter.encode(value, BarcodeFormat.QR_CODE, 200, 200);
+
+        return MatrixToImageWriter.toBufferedImage(bitMatrix);
     }
 
 }

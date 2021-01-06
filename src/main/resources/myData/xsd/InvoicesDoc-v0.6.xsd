@@ -34,6 +34,17 @@
 					<xs:documentation>Συμβολοσειρά Αυθεντικοποίησης Παρόχου</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="transmissionFailure" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Αδυναμία Επικοινωνίας Παρόχου</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:byte">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
 			<xs:element name="issuer" type="inv:PartyType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Στοιχεία Εκδότη</xs:documentation>
@@ -87,15 +98,25 @@
 	</xs:complexType>
 	<xs:complexType name="InvoiceHeaderType">
 		<xs:sequence>
-			<xs:element name="series" type="xs:string">
+			<xs:element name="series">
 				<xs:annotation>
 					<xs:documentation>Σειρά Παραστατικού</xs:documentation>
 				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="50"/>
+					</xs:restriction>
+				</xs:simpleType>
 			</xs:element>
-			<xs:element name="aa" type="xs:string">
+			<xs:element name="aa">
 				<xs:annotation>
 					<xs:documentation>ΑΑ Παραστατικού</xs:documentation>
 				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="50"/>
+					</xs:restriction>
+				</xs:simpleType>
 			</xs:element>
 			<xs:element name="issueDate" type="xs:date">
 				<xs:annotation>

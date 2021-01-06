@@ -94,9 +94,10 @@ public class DocumentViewController extends AbstractViewController {
         return getModelAndView("documentSummary", model);
     }
 
-    @GetMapping(value = "/issue/summary/public/{id}")
-    String getDocumentSummaryPublic(@PathVariable Long id, WebRequest request, final Model model) {
-        DocumentHeader documentHeader = documentService.getDocumentHeaderPublic(id);
+    @GetMapping(value = "/issue/summary/public/{authenticationCode}")
+    String getDocumentSummaryPublic(@PathVariable String authenticationCode, HttpServletRequest request, final Model model) throws Exception {
+        String appUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+        DocumentHeader documentHeader = documentService.getDocumentHeaderPublic(authenticationCode, appUrl);
 
         model.addAttribute("documentHeader", documentHeader);
 

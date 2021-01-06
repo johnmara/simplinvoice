@@ -14,5 +14,6 @@ public interface DocumentHeaderRepository extends JpaRepository<DocumentHeader, 
 
     DocumentHeader findDocumentHeaderById(Long id);
 
+    DocumentHeader findDocumentHeaderByAuthenticationCode(String authenticationCode);
 
 }

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ResponseDoc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <response>
+    <index>1</index>
+    <invoiceUid>9078A518B1E197DC645C44DDF8C286A58C1CCBE0</invoiceUid>
+    <invoiceMark>400001829527564</invoiceMark>
+    <authenticationCode>1E7D139EF4C0D34415094D3DF57F6670D783662D</authenticationCode>
+    <statusCode>Success</statusCode>
+  </response>
+</ResponseDoc>

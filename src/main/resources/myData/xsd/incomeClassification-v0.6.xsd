@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2011 sp1 (http://www.altova.com) by End User (free.org) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:icls="https://www.aade.gr/myDATA/incomeClassificaton/v1.0" targetNamespace="https://www.aade.gr/myDATA/incomeClassificaton/v1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="0.6">
 	<xs:element name="IncomeClassificationsDoc">
 		<xs:annotation>
@@ -55,7 +54,7 @@
 	</xs:complexType>
 	<xs:complexType name="IncomeClassificationType">
 		<xs:sequence>
-			<xs:element name="classificationType" type="icls:IncomeClassificationValueType">
+			<xs:element name="classificationType" type="icls:IncomeClassificationValueType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Κωδικός Χαρακτηρισμού</xs:documentation>
 				</xs:annotation>

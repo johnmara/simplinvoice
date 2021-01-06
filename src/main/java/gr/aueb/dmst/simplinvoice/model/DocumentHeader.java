@@ -38,6 +38,8 @@ public class DocumentHeader {
     private VatExemptionType vatExemptionType;
     private String mark;
     private String uid;
+    private String authenticationCode;
+    @Transient
     private String qrCodeValue;
 
     @ManyToOne
@@ -224,5 +226,13 @@ public class DocumentHeader {
 
     public void setCounterPart(Trader counterPart) {
         this.counterPart = counterPart;
+    }
+
+    public String getAuthenticationCode() {
+        return authenticationCode;
+    }
+
+    public void setAuthenticationCode(String authenticationCode) {
+        this.authenticationCode = authenticationCode;
     }
 }
