@@ -129,9 +129,10 @@
                                             <div class="card-body pt-0">
                                                 <div class="form-group row">
                                                     <div class="col-sm-6">
-                                                        <select th:id="'inputTaxType' + ${itemStat.index}" class="form-control" required>
+                                                        <select th:id="'inputTaxType' + ${itemStat.index}" class="form-control" required th:with="documentTaxToCheck=${documentHeader.documentTaxes[__${itemStat.index}__]?.type?.type}">
                                                             <option th:value="${null}" th:text="#{dropdown.select}"></option>
                                                             <option th:each="taxType : ${T(gr.aueb.dmst.simplinvoice.enums.AadeDocumentTaxCategory$AadeDocumentTaxType).values()}"
+                                                                    th:selected="${taxType.equals(documentTaxToCheck)}"
                                                                     th:value="${taxType}" th:text="#{'aade.tax.type.' + ${taxType}}">option 1</option>
                                                         </select>
                                                     </div>
