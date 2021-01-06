@@ -84,7 +84,7 @@ public class DocumentViewController extends AbstractViewController {
     }
 
     @GetMapping(value = "/issue/summary/{id}")
-    String getTrader(@PathVariable Long id, WebRequest request, final Model model) {
+    String getDocumentSummary(@PathVariable Long id, WebRequest request, final Model model) {
         Long companyProfileId = Utils.getUserFromWebRequest(request).getCompanyProfile().getId();
 
         DocumentHeader documentHeader = documentService.getDocumentHeaderById(id, companyProfileId);
@@ -92,6 +92,15 @@ public class DocumentViewController extends AbstractViewController {
         model.addAttribute("documentHeader", documentHeader);
 
         return getModelAndView("documentSummary", model);
+    }
+
+    @GetMapping(value = "/issue/summary/public/{id}")
+    String getDocumentSummaryPublic(@PathVariable Long id, WebRequest request, final Model model) {
+        DocumentHeader documentHeader = documentService.getDocumentHeaderPublic(id);
+
+        model.addAttribute("documentHeader", documentHeader);
+
+        return "documentSummaryPublic";
     }
 
     @PostMapping(value = "/issue/save")

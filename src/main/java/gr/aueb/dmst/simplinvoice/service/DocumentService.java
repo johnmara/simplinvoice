@@ -35,6 +35,11 @@ public class DocumentService {
         return documentHeaderRepository.findDocumentHeaderByIdAndCompanyProfileId(id, companyProfileId);
     }
 
+    public DocumentHeader getDocumentHeaderPublic(Long id) {
+        return documentHeaderRepository.findDocumentHeaderById(id);
+    }
+
+
     public List<DocumentHeader> getDocumentsList(DocumentType documentType, Long companyProfileId) {
         return documentHeaderRepository.findAllByTypeAndCompanyProfileId(documentType, companyProfileId);
     }

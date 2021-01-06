@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title th:text="#{app.title} + ' | ' + #{document.summary.public.title(${documentHeader.documentSeries.code + '-' + documentHeader.number})}">Print</title>
+
+        <!-- Google Font: Source Sans Pro -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" th:href="@{/plugins/fontawesome-free/css/all.min.css}">
+        <!-- Theme style -->
+        <link rel="stylesheet" th:href="@{/css/adminlte.min.css}">
+    </head>
+    <body>
+        <div class="wrapper">
+            <!-- Main content -->
+            <section class="invoice">
+                <!-- title row -->
+                <div class="row">
+                    <div class="col-12">
+                        <h4 th:inline="text">
+                            <i class="fas fa-globe"></i> [[${documentHeader.companyProfile.companyName}]]
+                            <small class="float-right" th:utext="#{document.summary.date(${#dates.format(documentHeader.date, 'dd/MM/yyyy')})}">Date: 2/10/2014</small>
+                        </h4>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- info row -->
+                <div class="row invoice-info">
+                    <div class="col-sm-4 invoice-col" th:inline="text">
+                        [[#{document.summary.from}]]
+                        <address>
+                            <strong th:text="${documentHeader.companyProfile.companyName}">Admin, Inc.</strong><br>
+                            [[${documentHeader.companyProfile.street + ' ' + documentHeader.companyProfile.streetNumber + ', ' + documentHeader.companyProfile.town}]]<br>
+                            [[${documentHeader.companyProfile.postalCode + ', ' + documentHeader.companyProfile.country}]]<br>
+                            [[#{document.summary.phone(${documentHeader.companyProfile.phoneNumber})}]]<br>
+                            [[#{document.summary.email(${documentHeader.companyProfile.email})}]]<br>
+                            [[#{document.summary.tax.office(${documentHeader.companyProfile.taxOffice})}]]
+                        </address>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-4 invoice-col" th:inline="text">
+                        [[#{document.summary.to}]]
+                        <address>
+                            <strong th:text="${documentHeader.counterPart.name}">Admin, Inc.</strong><br>
+                            [[${documentHeader.counterPart.street + ' ' + documentHeader.counterPart.streetNumber + ', ' + documentHeader.counterPart.town}]]<br>
+                            [[${documentHeader.counterPart.postalCode + ', ' + documentHeader.counterPart.country}]]<br>
+                            [[#{document.summary.phone(${documentHeader.counterPart.phoneNumber})}]]<br>
+                            [[#{document.summary.email(${documentHeader.counterPart.email})}]]<br>
+                            [[#{document.summary.tax.office(${documentHeader.counterPart.taxOffice})}]]
+                        </address>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-4 invoice-col">
+                        <b th:text="#{document.summary.invoice.id}"></b> [[${documentHeader.documentSeries.code + '-' + documentHeader.number}]]<br>
+                        <br>
+                        <b th:text="#{document.summary.invoice.type}">Type</b> [[${documentHeader.documentSeries.name}]]<br>
+                        <b th:text="#{document.summary.creation.date}">Date</b> [[${#dates.format(documentHeader.receivedDateTime, 'dd/MM/yyyy HH:mm')}]]<br>
+                        <b th:text="#{document.summary.invoice.vat.exemption}">Vat Exemption</b> [[#{'aade.vat.exemption.' + ${documentHeader.vatExemptionType != null ? documentHeader.vatExemptionType : 'NONE'}}]]<br>
+                        <b th:text="#{document.summary.invoice.payment.method}">Payment Method</b> [[#{'payment.method.' + ${documentHeader.paymentMethod}}]]<br>
+                        <b th:text="#{document.summary.mydata.label}">MyDATA</b><br>
+                        <b th:text="#{document.summary.mark}">MARK</b> [[${documentHeader.mark}]]<br>
+                        <b th:text="#{document.summary.uid}">UID</b> [[${documentHeader.uid}]]<br>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+
+                <!-- Items row -->
+                <div class="row">
+                    <div class="col-12 table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr th:with="currency=${documentHeader.currency}">
+                                <th th:text="#{document.summary.item.code}">Code</th>
+                                <th th:text="#{document.summary.item.name}">Name</th>
+                                <th th:text="#{document.summary.item.quantity}">Quantity</th>
+                                <th th:text="#{document.summary.item.measurement.unit}">Unit</th>
+                                <th th:text="#{document.summary.item.vat.category}">Vat</th>
+                                <th th:text="#{document.summary.item.discount.value(${currency})}">Discount</th>
+                                <th th:text="#{document.summary.item.net.value(${currency})}">Net</th>
+                                <th th:text="#{document.summary.item.vat.value(${currency})}">Vat value</th>
+                                <th th:text="#{document.summary.item.final.value(${currency})}">Final</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="documentItem, itemStat: ${documentHeader.documentItems}">
+                                <td th:text="${documentItem.material.code}"></td>
+                                <td th:text="${documentItem.material.description}"></td>
+                                <td th:text="${documentItem.quantity}"></td>
+                                <td th:text="#{'material.measurement.unit.' + ${documentItem.material.measurementUnit}}"></td>
+                                <td th:text="${documentItem.material.vatCategory.value}"></td>
+                                <td th:text="${documentItem.discountValue}"></td>
+                                <td th:text="${documentItem.netValue}"></td>
+                                <td th:text="${documentItem.vatValue}"></td>
+                                <td th:text="${documentItem.finalValue}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+
+                <!-- Taxes row -->
+                <div class="row">
+                    <div class="col-6 table-responsive">
+                        <p class="lead" th:text="#{document.summary.tax.title}">Taxes</p>
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th th:text="#{document.summary.tax.type}">Type</th>
+                                <th th:text="#{document.summary.tax.category}">Category</th>
+                                <th th:text="#{document.summary.tax.value(${documentHeader.currency})}">Value</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="documentTax, itemStat: ${documentHeader.documentTaxes}">
+                                <td th:text="#{'aade.tax.type.' + ${documentTax.type.type}}"></td>
+                                <td th:text="#{'aade.tax.category.' + ${documentTax.type}}"></td>
+                                <td th:text="${documentTax.amount}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-6">
+                        <p class="lead" th:text="#{document.summary.total}">Total</p>
+
+                        <div class="table-responsive">
+                            <table class="table" th:with="currency=${documentHeader.currency}">
+                                <tr>
+                                    <th style="width:50%" th:text="#{document.summary.total.net.value(${currency})}">Net</th>
+                                    <td th:text="${documentHeader.totalNetValue}"></td>
+                                </tr>
+                                <tr>
+                                    <th th:text="#{document.summary.total.vat.value(${currency})}">Vat</th>
+                                    <td th:text="${documentHeader.totalVatValue}"></td>
+                                </tr>
+                                <tr>
+                                    <th th:text="#{document.summary.total.tax.value(${currency})}">Tax</th>
+                                    <td th:text="${documentHeader.totalTaxValue}"></td>
+                                </tr>
+                                <tr>
+                                    <th th:text="#{document.summary.total.final.value(${currency})}">Final</th>
+                                    <td th:text="${documentHeader.totalFinalValue}"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+
+                <div class="row">
+                    <!-- accepted payments column -->
+                    <div class="col-6">
+                        <p class="lead" th:text="#{document.summary.notes}">Notes</p>
+
+                        <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;" th:text="${documentHeader.notes}"></p>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+
+                <!-- this row will not appear when printing -->
+                <div class="row no-print">
+                    <div class="col-12">
+                        <button type="button" id="pdfBtn" class="btn btn-primary float-right" style="margin-right: 5px;" th:inline="text">
+                            <i class="fas fa-download"></i> [[#{document.summary.generate.pdf}]]
+                        </button>
+                    </div>
+                </div>
+            </section>
+            <!-- /.invoice -->
+        </div><!-- /.col -->
+
+        <script>
+            document.getElementById("pdfBtn").addEventListener("click", function() {
+                window.print()
+            });
+        </script>
+    </body>
+</html>

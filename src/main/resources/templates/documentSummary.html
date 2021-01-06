@@ -18,7 +18,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-12">
+                <div class="col-12" id="toPrint">
                     <!-- Main content -->
                     <div class="invoice p-3 mb-3">
                         <!-- title row -->
@@ -72,7 +72,7 @@
                         </div>
                         <!-- /.row -->
 
-                        <!-- Table row -->
+                        <!-- Items row -->
                         <div class="row">
                             <div class="col-12 table-responsive">
                                 <table class="table table-striped">
@@ -108,12 +108,26 @@
                         </div>
                         <!-- /.row -->
 
+                        <!-- Taxes row -->
                         <div class="row">
-                            <!-- accepted payments column -->
-                            <div class="col-6">
-                                <p class="lead" th:text="#{document.summary.notes}">Notes</p>
-
-                                <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;" th:text="${documentHeader.notes}"></p>
+                            <div class="col-6 table-responsive">
+                                <p class="lead" th:text="#{document.summary.tax.title}">Taxes</p>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th th:text="#{document.summary.tax.type}">Type</th>
+                                            <th th:text="#{document.summary.tax.category}">Category</th>
+                                            <th th:text="#{document.summary.tax.value(${documentHeader.currency})}">Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="documentTax, itemStat: ${documentHeader.documentTaxes}">
+                                            <td th:text="#{'aade.tax.type.' + ${documentTax.type.type}}"></td>
+                                            <td th:text="#{'aade.tax.category.' + ${documentTax.type}}"></td>
+                                            <td th:text="${documentTax.amount}"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                             <!-- /.col -->
                             <div class="col-6">
@@ -144,10 +158,21 @@
                         </div>
                         <!-- /.row -->
 
+                        <div class="row">
+                            <!-- accepted payments column -->
+                            <div class="col-6">
+                                <p class="lead" th:text="#{document.summary.notes}">Notes</p>
+
+                                <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;" th:text="${documentHeader.notes}"></p>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                        <!-- /.row -->
+
                         <!-- this row will not appear when printing -->
                         <div class="row no-print">
                             <div class="col-12">
-                                <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;" th:inline="text">
+                                <button type="button" id="pdfBtn" class="btn btn-primary float-right" style="margin-right: 5px;" th:inline="text">
                                     <i class="fas fa-download"></i> [[#{document.summary.generate.pdf}]]
                                 </button>
                             </div>
@@ -164,7 +189,9 @@
 
 <th:block th:fragment="pageCustomScript">
     <script>
-
+        $( "#pdfBtn" ).click(function() {
+            window.print()
+        });
     </script>
 </th:block>
 

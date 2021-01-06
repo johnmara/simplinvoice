@@ -12,5 +12,7 @@ public interface DocumentHeaderRepository extends JpaRepository<DocumentHeader, 
 
     DocumentHeader findDocumentHeaderByIdAndCompanyProfileId(Long id, Long companyProfileId);
 
+    DocumentHeader findDocumentHeaderById(Long id);
+
 
 }
