@@ -65,7 +65,7 @@ public class Utils {
         return convertToSha1(sb.toString());
     }
 
-    static String convertToSha1(String value) {
+    public static String convertToSha1(String value) {
         return DigestUtils.sha1Hex(value).toUpperCase();
     }
 

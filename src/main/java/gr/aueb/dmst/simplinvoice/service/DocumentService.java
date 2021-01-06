@@ -37,12 +37,18 @@ public class DocumentService {
     @Autowired
     DocumentSeriesRepository documentSeriesRepository;
 
+    @Autowired
+    DocumentToInvoiceDocConverter documentToInvoiceDocConverter;
+
     public DocumentHeader getDocumentHeaderById(Long id, Long companyProfileId) {
         return documentHeaderRepository.findDocumentHeaderByIdAndCompanyProfileId(id, companyProfileId);
     }
 
     public DocumentHeader getDocumentHeaderPublic(String authenticationCode, String appUrl) throws Exception {
         DocumentHeader documentHeader = documentHeaderRepository.findDocumentHeaderByAuthenticationCode(authenticationCode);
+
+        documentToInvoiceDocConverter.convertDocumentToInvoiceDoc(documentHeader);
+        documentToInvoiceDocConverter.retrieveDataFromResponseObject(documentHeader);
 
         BufferedImage bufferedImage = generateQRCodeImage(authenticationCode, appUrl);
 

@@ -66,7 +66,6 @@
 			<version>3.3.0</version>
 		</dependency>
 
-
 		<!--	TEST DEPENDENCIES	-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -91,6 +90,33 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxb2-maven-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<id>xjc</id>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+<!--					<xjbSources>-->
+<!--						<xjbSource>src/main/resources/global.xjb</xjbSource>-->
+<!--					</xjbSources>-->
+					<sources>
+						<source>src/main/resources/myData/xsd/expensesClassification-v0.6.xsd</source>
+						<source>src/main/resources/myData/xsd/incomeClassification-v0.6.xsd</source>
+						<source>src/main/resources/myData/xsd/InvoicesDoc-v0.6.xsd</source>
+						<source>src/main/resources/myData/xsd/RequestedProviderDoc-v0.6.xsd</source>
+						<source>src/main/resources/myData/xsd/Response-v0.6.xsd</source>
+					</sources>
+					<outputDirectory>target/generated-sources/xjc</outputDirectory>
+					<clearOutputDir>false</clearOutputDir>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
