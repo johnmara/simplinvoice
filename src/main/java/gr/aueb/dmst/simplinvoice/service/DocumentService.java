@@ -44,13 +44,13 @@ public class DocumentService {
         return documentHeaderRepository.findDocumentHeaderByIdAndCompanyProfileId(id, companyProfileId);
     }
 
-    public DocumentHeader getDocumentHeaderPublic(String authenticationCode, String appUrl) throws Exception {
+    public DocumentHeader getDocumentHeaderPublic(String authenticationCode, String requestUrl) throws Exception {
         DocumentHeader documentHeader = documentHeaderRepository.findDocumentHeaderByAuthenticationCode(authenticationCode);
 
         documentToInvoiceDocConverter.convertDocumentToInvoiceDoc(documentHeader);
         documentToInvoiceDocConverter.retrieveDataFromResponseObject(documentHeader);
 
-        BufferedImage bufferedImage = generateQRCodeImage(authenticationCode, appUrl);
+        BufferedImage bufferedImage = generateQRCodeImage(requestUrl);
 
         String bytesBase64 = Base64.getEncoder().encodeToString(Utils.toByteArray(bufferedImage, "png"));
         documentHeader.setQrCodeValue(bytesBase64);
@@ -106,11 +106,9 @@ public class DocumentService {
         documentHeaderRepository.save(documentHeader);
     }
 
-    public BufferedImage generateQRCodeImage(String authenticationCode, String appUrl) throws Exception {
-        String value = appUrl + "/document/issue/summary/public/" + authenticationCode;
-
+    public BufferedImage generateQRCodeImage(String requestUrl) throws Exception {
         QRCodeWriter barcodeWriter = new QRCodeWriter();
-        BitMatrix bitMatrix = barcodeWriter.encode(value, BarcodeFormat.QR_CODE, 200, 200);
+        BitMatrix bitMatrix = barcodeWriter.encode(requestUrl, BarcodeFormat.QR_CODE, 200, 200);
 
         return MatrixToImageWriter.toBufferedImage(bitMatrix);
     }
