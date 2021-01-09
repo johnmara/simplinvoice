@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<title th:fragment="title" th:text="#{app.title} + ' | ' + #{document.issue.page.title}"></title>
+<title th:fragment="title" th:text="#{app.title} + ' | ' +
+                                        (${documentHeader.type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED} ? #{document.issue.page.title} : #{document.receive.page.title})"></title>
+
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper" th:fragment="container">
@@ -15,19 +17,25 @@
         </div><!-- /.container-fluid -->
     </section>
 
-    <section class="content">
+    <section class="content" th:with="isIssued=${documentHeader.type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED}">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
                     <!-- Main content -->
                     <div class="invoice p-3 mb-3">
 
-                        <th:block th:replace="fragments/documentSummaryFragment :: documentSummary(documentHeader=${documentHeader})"></th:block>
+                        <th:block th:if="${isIssued}">
+                            <th:block th:replace="fragments/documentSummaryFragment :: documentIssueSummary(documentHeader=${documentHeader})"></th:block>
+                        </th:block>
+                        <th:block th:unless="${isIssued}">
+                            <th:block th:replace="fragments/documentSummaryFragment :: documentReceiveSummary(documentHeader=${documentHeader})"></th:block>
+                        </th:block>
+
 
                         <!-- this row will not appear when printing -->
                         <div class="row no-print">
                             <div class="col-12">
-                                <a th:href="@{/document/issue/summary/public/__${documentHeader.authenticationCode}__}" rel="noopener" target="_blank" class="btn btn-default" th:inline="text"><i class="fas fa-eye"></i> [[#{document.summary.view.public}]]</a>
+                                <a th:if="${isIssued}" th:href="@{/document/issue/summary/public/__${documentHeader.authenticationCode}__}" rel="noopener" target="_blank" class="btn btn-default" th:inline="text"><i class="fas fa-eye"></i> [[#{document.summary.view.public}]]</a>
                                 <button type="button" id="pdfBtn" class="btn btn-primary float-right" style="margin-right: 5px;" th:inline="text">
                                     <i class="fas fa-download"></i> [[#{document.summary.generate.pdf}]]
                                 </button>

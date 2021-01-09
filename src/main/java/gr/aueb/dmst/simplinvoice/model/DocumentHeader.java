@@ -18,6 +18,8 @@ public class DocumentHeader {
     @Enumerated(EnumType.STRING)
     private DocumentType type;
 
+    private String documentCustomId;
+
     @Column
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern="dd/MM/yyyy")
@@ -234,5 +236,13 @@ public class DocumentHeader {
 
     public void setAuthenticationCode(String authenticationCode) {
         this.authenticationCode = authenticationCode;
+    }
+
+    public String getDocumentCustomId() {
+        return documentCustomId;
+    }
+
+    public void setDocumentCustomId(String documentCustomId) {
+        this.documentCustomId = documentCustomId;
     }
 }

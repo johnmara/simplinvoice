@@ -67,7 +67,9 @@ public class DocumentService {
     public DocumentHeader addDocumentHeader(DocumentHeader documentHeader) {
         boolean isNewEntry = documentHeader.getId() == null;
 
-        updateDocumentSeriesNumber(documentHeader);
+        if(documentHeader.getType().equals(DocumentType.ISSUED))
+            updateDocumentSeriesNumber(documentHeader);
+
         documentHeader.setReceivedDateTime(new Date());
         if(!isNewEntry) {
             documentItemRepository.deleteAllByDocumentHeader(documentHeader);
@@ -86,7 +88,7 @@ public class DocumentService {
                 documentTaxRepository.save(tax);
             }
 
-        if(isNewEntry) {
+        if(isNewEntry && documentHeader.getType().equals(DocumentType.ISSUED)) {
             sendToMyData(documentHeader);
         }
 

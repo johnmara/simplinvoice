@@ -55,7 +55,7 @@ public class DocumentViewController extends AbstractViewController {
     }
 
     @GetMapping(value = {"/issue/", "/issue/{id}"})
-    String getDocument(@PathVariable(required = false) Long id, WebRequest request, final Model model) {
+    String getDocumentIssued(@PathVariable(required = false) Long id, WebRequest request, final Model model) {
         Long companyProfileId = Utils.getUserFromWebRequest(request).getCompanyProfile().getId();
 
         DocumentHeader documentHeader;
@@ -79,11 +79,42 @@ public class DocumentViewController extends AbstractViewController {
         model.addAttribute("materialsList", materialsList);
         model.addAttribute("documentSeriesList", documentSeriesList);
         model.addAttribute("documentHeader", documentHeader);
+        model.addAttribute("type", DocumentType.ISSUED);
 
         return getModelAndView("documentIssuePage", model);
     }
 
-    @GetMapping(value = "/issue/summary/{id}")
+    @GetMapping(value = {"/receive/", "/receive/{id}"})
+    String getDocumentReceive(@PathVariable(required = false) Long id, WebRequest request, final Model model) {
+        Long companyProfileId = Utils.getUserFromWebRequest(request).getCompanyProfile().getId();
+
+        DocumentHeader documentHeader;
+
+        if(id != null) {
+            documentHeader = documentService.getDocumentHeaderById(id, companyProfileId);
+        } else {
+            documentHeader = new DocumentHeader();
+            documentHeader.setDate(new Date());
+            documentHeader.setCurrency("EUR");
+            documentHeader.setDocumentItems(new ArrayList<>());
+            DocumentItem documentItem = new DocumentItem();
+            documentHeader.getDocumentItems().add(documentItem);
+            documentHeader.setDocumentTaxes(new ArrayList<>());
+        }
+
+        List<Trader> tradersList = traderService.getTradersList(TraderType.SUPPLIER, companyProfileId);
+        List<Material> materialsList = materialService.getMaterialsList(companyProfileId);
+        List<DocumentSeries> documentSeriesList = documentSeriesService.getDocumentSeriesList(companyProfileId);
+        model.addAttribute("tradersList", tradersList);
+        model.addAttribute("materialsList", materialsList);
+        model.addAttribute("documentSeriesList", documentSeriesList);
+        model.addAttribute("documentHeader", documentHeader);
+        model.addAttribute("type", DocumentType.RECEIVED);
+
+        return getModelAndView("documentReceivePage", model);
+    }
+
+    @GetMapping(value = "/summary/{id}")
     String getDocumentSummary(@PathVariable Long id, WebRequest request, final Model model) {
         Long companyProfileId = Utils.getUserFromWebRequest(request).getCompanyProfile().getId();
 
@@ -102,11 +133,11 @@ public class DocumentViewController extends AbstractViewController {
 
         model.addAttribute("documentHeader", documentHeader);
 
-        return "documentSummaryPublic";
+        return "documentIssueSummaryPublic";
     }
 
     @PostMapping(value = "/issue/save")
-    String saveDocument(
+    String saveDocumentIssue(
             @ModelAttribute("documentHeader") @Valid DocumentHeader documentHeader, Errors errors, Model model, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 
         if(errors.hasErrors())
@@ -121,41 +152,70 @@ public class DocumentViewController extends AbstractViewController {
         return addSuccessMessageAndRedirect("/document/list", messageSource.getMessage("document.added.success", null, request.getLocale()), redirectAttributes);
     }
 
-    @PostMapping(params = "addItem", path = {"/item", "/item/{id}"})
-    public String addDocumentItem(DocumentHeader documentHeader, HttpServletRequest request, Model model) {
+    @PostMapping(value = "/receive/save")
+    String saveDocumentReceive(
+            @ModelAttribute("documentHeader") @Valid DocumentHeader documentHeader, Errors errors, Model model, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+
+        if(errors.hasErrors())
+            return getModelAndView("documentReceivePage", model);
+
+        documentHeader.setCompanyProfile(Utils.getUserFromHttpServletRequest(request).getCompanyProfile());
+        documentHeader.setType(DocumentType.RECEIVED);
+
+        documentService.addDocumentHeader(documentHeader);
+
+        redirectAttributes.addAttribute("type", documentHeader.getType());
+        return addSuccessMessageAndRedirect("/document/list", messageSource.getMessage("document.added.success", null, request.getLocale()), redirectAttributes);
+    }
+
+    @PostMapping(params = {"addItem", "documentType"}, path = {"/item", "/item/{id}"})
+    public String addDocumentItem(DocumentHeader documentHeader, @RequestParam("documentType") DocumentType documentType, HttpServletRequest request, Model model) {
         Long companyProfileId = Utils.getUserFromHttpServletRequest(request).getCompanyProfile().getId();
         List<Material> materialsList = materialService.getMaterialsList(companyProfileId);
         model.addAttribute("materialsList", materialsList);
 
         documentHeader.getDocumentItems().add(new DocumentItem());
-        return "documentIssuePage::#documentItems";
+        return getDocumentPage(documentType) + "::#documentItems";
     }
 
-    @PostMapping(params = "removeItem", path = {"/item", "/item/{id}"})
-    public String removeDocumentItem(DocumentHeader documentHeader, @RequestParam("removeItem") int index, HttpServletRequest request, Model model) {
+    @PostMapping(params = {"removeItem", "documentType"}, path = {"/item", "/item/{id}"})
+    public String removeDocumentItem(DocumentHeader documentHeader, @RequestParam("removeItem") int index,
+                                     @RequestParam("documentType") DocumentType documentType, HttpServletRequest request, Model model) {
         Long companyProfileId = Utils.getUserFromHttpServletRequest(request).getCompanyProfile().getId();
         List<Material> materialsList = materialService.getMaterialsList(companyProfileId);
         model.addAttribute("materialsList", materialsList);
 
         documentHeader.getDocumentItems().remove(index);
-        return "documentIssuePage::#documentItems";
-
+        return getDocumentPage(documentType) + "::#documentItems";
     }
 
-    @PostMapping(params = "addTax", path = {"/tax", "/tax/{id}"})
-    public String addDocumentTax(DocumentHeader documentHeader, HttpServletRequest request, Model model) {
+    @PostMapping(params = {"addTax", "documentType"}, path = {"/tax", "/tax/{id}"})
+    public String addDocumentTax(DocumentHeader documentHeader, @RequestParam("documentType") DocumentType documentType, HttpServletRequest request, Model model) {
         if(documentHeader.getDocumentTaxes() == null) {
             documentHeader.setDocumentTaxes(new ArrayList<>());
         }
         documentHeader.getDocumentTaxes().add(new DocumentTax());
-        return "documentIssuePage::#documentTaxes";
+
+        return getDocumentPage(documentType) + "::#documentTaxes";
     }
 
-    @PostMapping(params = "removeTax", path = {"/tax", "/tax/{id}"})
-    public String removeDocumentTax(DocumentHeader documentHeader, @RequestParam("removeTax") int index, HttpServletRequest request, Model model) {
+    @PostMapping(params = {"removeTax", "documentType"}, path = {"/tax", "/tax/{id}"})
+    public String removeDocumentTax(DocumentHeader documentHeader, @RequestParam("removeTax") int index,
+                                    @RequestParam("documentType") DocumentType documentType, HttpServletRequest request, Model model) {
         documentHeader.getDocumentTaxes().remove(index);
-        return "documentIssuePage::#documentTaxes";
 
+        return getDocumentPage(documentType) + "::#documentTaxes";
+    }
+
+    private String getDocumentPage(DocumentType documentType) {
+        switch (documentType) {
+            case ISSUED:
+                return "documentIssuePage";
+            case RECEIVED:
+                return "documentReceivePage";
+            default:
+                return "documentIssuePage";
+        }
     }
 
 }

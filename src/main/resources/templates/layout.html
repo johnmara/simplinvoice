@@ -148,9 +148,9 @@
                             </ul>
                         </li>
                         <li class="nav-item"
-                            th:classappend="${#lists.contains({'documentsList', 'documentIssuePage'}, view) ? 'menu-open' : ''}">
+                            th:classappend="${#lists.contains({'documentsList', 'documentIssuePage', 'documentReceivePage'}, view) ? 'menu-open' : ''}">
                             <a href="#" class="nav-link"
-                               th:classappend="${#lists.contains({'documentsList', 'documentIssuePage'}, view) ? 'active' : ''}">
+                               th:classappend="${#lists.contains({'documentsList', 'documentIssuePage', 'documentReceivePage'}, view) ? 'active' : ''}">
                                 <i class="nav-icon fas fa-file-invoice"></i>
                                 <p th:inline="text">
                                     [[#{menu.invoicing}]]
@@ -160,14 +160,14 @@
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a th:href="@{/document/list(type=${T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED})}" class="nav-link"
-                                       th:classappend="${view.equals('documentsList') && type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED ? 'active' : ''}">
+                                       th:classappend="${#lists.contains({'documentsList', 'documentIssuePage'}, view) && type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED ? 'active' : ''}">
                                         <i class="far fa-arrow-alt-circle-right nav-icon"></i>
                                         <p th:text="#{menu.invoicing.issued.invoices}">Issued invoices</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a th:href="@{/document/list(type=${T(gr.aueb.dmst.simplinvoice.enums.DocumentType).RECEIVED})}" class="nav-link"
-                                       th:classappend="${view.equals('documentsList') && type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).RECEIVED ? 'active' : ''}">
+                                       th:classappend="${#lists.contains({'documentsList', 'documentReceivePage'}, view) && type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).RECEIVED ? 'active' : ''}">
                                         <i class="far fa-arrow-alt-circle-left nav-icon"></i>
                                         <p th:text="#{menu.invoicing.received.invoices}">Received invoices</p>
                                     </a>

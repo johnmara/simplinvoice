@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <title th:fragment="title" th:text="#{app.title} + ' | ' +
-                                        (${type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED} ? #{document.issue.list.page.title} : #{document.received.list.page.title})"></title>
+                                        (${type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED} ? #{document.add.list.page.title} : #{document.receive.list.page.title})"></title>
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper" th:fragment="container">
@@ -11,7 +11,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 th:text="${type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED} ? #{document.issue.list.page.title} : #{document.received.list.page.title}">DataTables</h1>
+                        <h1 th:text="${type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED} ? #{document.add.list.page.title} : #{document.receive.list.page.title}">DataTables</h1>
                     </div>
                 </div>
             </div><!-- /.container-fluid -->
@@ -22,11 +22,11 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
-                        <div class="card">
+                        <div class="card" th:with="isIssued=${type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED}">
                             <div class="card-header">
                                 <h3 class="card-title" th:text="#{list.all}"></h3>
                                 <div class="card-tools">
-                                    <a class="btn btn-default btn-sm" th:href="${type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED} ? @{/document/issue/} : @{/document/receive/}"><i class="fas fa-plus"></i></a>
+                                    <a class="btn btn-default btn-sm" th:href="${isIssued} ? @{/document/issue/} : @{/document/receive/}"><i class="fas fa-plus"></i></a>
                                 </div>
                             </div>
                             <!-- /.card-header -->
@@ -46,7 +46,7 @@
                                     <tbody>
                                         <tr th:each="document, iStat: ${documentsList}">
                                             <td th:text="${document.id}"></td>
-                                            <td th:text="${document.documentSeries.code + '-' + document.number}"></td>
+                                            <td th:text="${isIssued ? (document.documentSeries.code + '-' + document.number) : document.documentCustomId}"></td>
                                             <td th:text="${#dates.format(document.date, 'dd/MM/yyyy')}"></td>
                                             <td th:text="${document.counterPart.name}"></td>
                                             <td th:text="${document.totalFinalValue}"></td>
@@ -75,13 +75,13 @@
     <th:block th:fragment="pageCustomScript">
 
         <script th:inline="javascript">
-            var documentIssue = [[${type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED}]];
+            var isDocumentIssued = [[${type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED}]];
             var documentIssuePath = /*[[@{/document/issue/}]]*/;
             var documentReceivePath = /*[[@{/document/receive/}]]*/;
-            var editUrl = documentIssue ? documentIssuePath : documentReceivePath;
+            var editUrl = isDocumentIssued ? documentIssuePath : documentReceivePath;
 
             var iconForSummary = '<i class="fas fa-file-alt"></i>';
-            var summaryUrl = /*[[@{/document/issue/summary/}]]*/;
+            var summaryUrl = /*[[@{/document/summary/}]]*/;
 
             $(function () {
                 $("#documentsList").DataTable({

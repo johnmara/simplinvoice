@@ -29,7 +29,7 @@
                     </div>
 
                     <!-- Horizontal Form -->
-                    <form id="createForm" class="form-horizontal" th:action="@{/document/issue/save}" th:object="${documentHeader}" method="post">
+                    <form id="createForm" class="form-horizontal" th:action="@{/document/receive/save}" th:object="${documentHeader}" method="post">
                         <input type="hidden" th:field="*{id}" id="documentHeaderid">
 
                         <!-- Invoice Info  -->
@@ -41,21 +41,10 @@
 
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-8">
                                         <div class="form-group">
-                                            <label th:for="inputDocumentSeries" th:text="#{document.add.invoice.series} + '*'">Series</label>
-                                            <select id="inputDocumentSeries" class="form-control select2" required th:field="*{documentSeries}">
-                                                <option th:value="${null}" th:text="#{dropdown.select}"></option>
-                                                <option th:each="documentSeries : ${documentSeriesList}"
-                                                        th:attr="data-documentSeriesLastNumber=${documentSeries.lastNumber}"
-                                                        th:value="${documentSeries.id}" th:text="${documentSeries.code + ' - ' + documentSeries.name}">option 1</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <div class="form-group">
-                                            <label th:for="inputDocumentNumber" th:text="#{document.add.invoice.number}">Number</label>
-                                            <input type="number" class="form-control" th:id="inputDocumentNumber" th:placeholder="#{document.add.invoice.number}" readonly th:field="*{number}">
+                                            <label th:for="inputDocumentCustomId" th:text="#{document.add.document.custom.id}">Custom Id</label>
+                                            <input type="text" class="form-control" th:id="inputDocumentCustomId" th:placeholder="#{document.add.document.custom.id}" th:field="*{documentCustomId}">
                                         </div>
                                     </div>
                                     <div class="col-sm-4">
@@ -149,7 +138,7 @@
                                                 <div class="form-group row">
                                                     <label th:for="'inputTaxAmount' + ${itemStat.index}" class="col-sm-2 col-form-label" th:text="#{document.add.taxes.amount.field}">Amount</label>
                                                     <div class="col-sm-6">
-                                                        <input type="number" step=".01" class="form-control tax-value" th:id="'inputTaxAmount' + ${itemStat.index}" th:placeholder="#{document.add.taxes.amount.field}" readonly th:field="${documentHeader.documentTaxes[__${itemStat.index}__].amount}">
+                                                        <input type="number" step=".01" class="form-control tax-value" th:id="'inputTaxAmount' + ${itemStat.index}" th:placeholder="#{document.add.taxes.amount.field}" th:field="${documentHeader.documentTaxes[__${itemStat.index}__].amount}">
                                                     </div>
                                                 </div>
 
@@ -229,26 +218,20 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-sm-3">
+                                                    <div class="col-sm-4">
                                                         <div class="form-group">
-                                                            <label th:for="'inputItemQuantity' + ${itemStat.index}" th:text="#{document.add.material.quantity.select} + '*'">Country</label>
-                                                            <input type="number" class="form-control" th:id="'inputItemQuantity' + ${itemStat.index}" th:placeholder="#{document.add.material.quantity.select}" required th:field="${documentHeader.documentItems[__${itemStat.index}__].quantity}">
+                                                            <label th:for="'inputItemQuantity' + ${itemStat.index}" th:text="#{document.add.material.quantity.select} + '*'">Quantity</label>
+                                                            <input type="number" step=".01" class="form-control" th:id="'inputItemQuantity' + ${itemStat.index}" th:placeholder="#{document.add.material.quantity.select}" required th:field="${documentHeader.documentItems[__${itemStat.index}__].quantity}">
                                                         </div>
                                                     </div>
-                                                    <div class="col-sm-3">
+                                                    <div class="col-sm-4">
                                                         <div class="form-group">
                                                             <label th:for="'inputMaterialMeasurementUnit' + ${itemStat.index}" th:text="#{document.add.material.measurement.unit}">Country</label>
                                                             <input type="text" class="form-control" th:id="'inputMaterialMeasurementUnit' + ${itemStat.index}" th:placeholder="#{document.add.material.measurement.unit}" readonly
                                                                    th:field="${documentHeader.documentItems[__${itemStat.index}__].material.measurementUnit}">
                                                         </div>
                                                     </div>
-                                                    <div class="col-sm-3">
-                                                        <div class="form-group">
-                                                            <label th:for="'inputMaterialPrice' + ${itemStat.index}" th:text="#{document.add.material.price}">Price</label>
-                                                            <input type="text" class="form-control" th:id="'inputMaterialPrice' + ${itemStat.index}" th:placeholder="#{document.add.material.price}" readonly th:field="${documentHeader.documentItems[__${itemStat.index}__].material.retailPrice}">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-3">
+                                                    <div class="col-sm-4">
                                                         <div class="form-group" th:with="vatCategory=${documentHeader.documentItems[__${itemStat.index}__].material.vatCategory}">
                                                             <label th:for="'inputVatCategory' + ${itemStat.index}" th:text="#{document.add.material.vat.category}">Price</label>
                                                             <input type="text" class="form-control" th:id="'inputVatCategory' + ${itemStat.index}" th:placeholder="#{document.add.material.vat.category}" readonly
@@ -259,26 +242,26 @@
                                                 <div class="row">
                                                     <div class="col-sm-3">
                                                         <div class="form-group">
-                                                            <label th:for="'inputDiscountValue' + ${itemStat.index}" th:text="#{document.add.discount}">Country</label>
+                                                            <label th:for="'inputDiscountValue' + ${itemStat.index}" th:text="#{document.add.discount}">Discount</label>
                                                             <input type="number" step=".01" class="form-control" th:id="'inputDiscountValue' + ${itemStat.index}" th:placeholder="#{document.add.discount}" th:field="${documentHeader.documentItems[__${itemStat.index}__].discountValue}">
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-3">
                                                         <div class="form-group">
                                                             <label th:for="'inputItemNetValue' + ${itemStat.index}" th:text="#{document.add.item.net.value}">Net</label>
-                                                            <input type="number" step=".01" class="form-control item-net-value" th:id="'inputItemNetValue' + ${itemStat.index}" readonly th:field="${documentHeader.documentItems[__${itemStat.index}__].netValue}">
+                                                            <input type="number" step=".01" class="form-control item-net-value" th:id="'inputItemNetValue' + ${itemStat.index}" required th:field="${documentHeader.documentItems[__${itemStat.index}__].netValue}">
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-3">
                                                         <div class="form-group">
                                                             <label th:for="'inputItemVatValue' + ${itemStat.index}" th:text="#{document.add.item.vat.value}">Vat</label>
-                                                            <input type="number" step=".01" class="form-control item-vat-value" th:id="'inputItemVatValue' + ${itemStat.index}" readonly th:field="${documentHeader.documentItems[__${itemStat.index}__].vatValue}">
+                                                            <input type="number" step=".01" class="form-control item-vat-value" th:id="'inputItemVatValue' + ${itemStat.index}" required th:field="${documentHeader.documentItems[__${itemStat.index}__].vatValue}">
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-3">
                                                         <div class="form-group">
                                                             <label th:for="'inputItemFinalValue' + ${itemStat.index}" th:text="#{document.add.item.final.value}">Final Value</label>
-                                                            <input type="number" class="form-control item-final-value" th:id="'inputItemFinalValue' + ${itemStat.index}" th:placeholder="#{document.add.item.final.value}" readonly th:field="${documentHeader.documentItems[__${itemStat.index}__].finalValue}">
+                                                            <input type="number" step=".01" class="form-control item-final-value" th:id="'inputItemFinalValue' + ${itemStat.index}" th:placeholder="#{document.add.item.final.value}" required th:field="${documentHeader.documentItems[__${itemStat.index}__].finalValue}">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -310,25 +293,25 @@
                                     <div class="col-sm-3">
                                         <div class="form-group">
                                             <label for="totalNetValue" th:text="#{document.add.total.net.value}">Total Net value</label>
-                                            <input type="number" class="form-control" id="totalNetValue" th:placeholder="#{document.add.total.net.value}" readonly th:field="*{totalNetValue}">
+                                            <input type="number" class="form-control" id="totalNetValue" th:placeholder="#{document.add.total.net.value}" required th:field="*{totalNetValue}">
                                         </div>
                                     </div>
                                     <div class="col-sm-3">
                                         <div class="form-group">
                                             <label for="totalVatValue" th:text="#{document.add.total.vat.value}">Total Net value</label>
-                                            <input type="number" class="form-control" id="totalVatValue" th:placeholder="#{document.add.total.vat.value}" readonly th:field="*{totalVatValue}">
+                                            <input type="number" step=".01" class="form-control" id="totalVatValue" th:placeholder="#{document.add.total.vat.value}" required th:field="*{totalVatValue}">
                                         </div>
                                     </div>
                                     <div class="col-sm-3">
                                         <div class="form-group">
                                             <label for="totalTaxValue" th:text="#{document.add.total.tax.value}">Total Tax value</label>
-                                            <input type="number" class="form-control" id="totalTaxValue" th:placeholder="#{document.add.total.tax.value}" readonly th:field="*{totalTaxValue}">
+                                            <input type="number" step=".01" class="form-control" id="totalTaxValue" th:placeholder="#{document.add.total.tax.value}" required th:field="*{totalTaxValue}">
                                         </div>
                                     </div>
                                     <div class="col-sm-3">
                                         <div class="form-group">
                                             <label for="totalFinalValue" th:text="#{document.add.total.final.value}">Total final value</label>
-                                            <input type="number" step="0.1" class="form-control" id="totalFinalValue" th:placeholder="#{document.add.total.final.value}" readonly th:field="*{totalFinalValue}">
+                                            <input type="number" step=".01" class="form-control" id="totalFinalValue" th:placeholder="#{document.add.total.final.value}" required th:field="*{totalFinalValue}">
                                         </div>
                                     </div>
                                 </div>
@@ -369,11 +352,6 @@
 
         $('[data-mask]').inputmask()
 
-        $("#inputDocumentSeries").change(function () {
-            var lastNumber = Number($(this).find(":selected").data("documentserieslastnumber"));
-            $("#inputDocumentNumber").val(lastNumber + 1);
-        });
-
         $("#inputCounterPart").change(function () {
             if($(this).val() === '') {
                 $("#counterPartEmail").val('');
@@ -396,29 +374,29 @@
             var $inputTaxAmount = $parentElement.find('[id^=inputTaxAmount]');
             $inputTaxAmount.val('');
 
+
+
             initiateDocumentTax($parentElement)
         });
 
         $( "body" ).on("change", '[id^=inputMaterial]', function( event ) {
 
             var $parentElement = $(this).parents('.card-body').first();
-            var $materialPrice = $parentElement.find('[id^=inputMaterialPrice]');
             var $materialMeasurementUnit = $parentElement.find('[id^=inputMaterialMeasurementUnit]');
-            var $itemFinalValue = $parentElement.find('[id^=inputItemFinalValue]');
             var $itemQuantity = $parentElement.find('[id^=inputItemQuantity]');
             var $vatCategory = $parentElement.find('[id^=inputVatCategory]');
             var $discountValue = $parentElement.find('[id^=inputDiscountValue]');
             var $itemNetValue = $parentElement.find('[id^=inputItemNetValue]');
             var $itemVatValue = $parentElement.find('[id^=inputItemVatValue]');
+            var $itemFinalValue = $parentElement.find('[id^=inputItemFinalValue]');
 
             $itemQuantity.val('');
             $discountValue.val('');
-            $itemFinalValue.val('');
             $itemNetValue.val('');
             $itemVatValue.val('');
+            $itemFinalValue.val('');
 
             if($(this).val() === '') {
-                $materialPrice.val('');
                 $materialMeasurementUnit.val('');
                 $vatCategory.val('');
                 return
@@ -428,7 +406,6 @@
                 type : "GET",
                 url : url + "api/material/" + $(this).val(),
                 success: function(data){
-                    $materialPrice.val(data.retailPrice);
                     $materialMeasurementUnit.val(data.measurementUnit);
                     $vatCategory.val(data.vatPercent);
                 }
@@ -437,21 +414,33 @@
             calculateTotalValues();
         });
 
-        $( "body" ).on("change", '[id^=inputItemQuantity], [id^=inputDiscountValue]', function( event ) {
+        $( "body" ).on("change", '[id^=inputItemQuantity], [id^=inputDiscountValue], [id^=inputItemNetValue]', function( event ) {
             //Update the value
             $(this).val($(this).val());
 
             var $parentElement = $(this).parents('.card-body').first();
-            var materialPrice = Number($parentElement.find('[id^=inputMaterialPrice]').val());
-            var discountValue = Number($parentElement.find('[id^=inputDiscountValue]').val());
             var quantity = Number($parentElement.find('[id^=inputItemQuantity]').val());
             var vatPercent = Number($parentElement.find('[id^=inputVatCategory]').val());
+            var discountValue = Number($parentElement.find('[id^=inputDiscountValue]').val());
+            var netValue = Number($parentElement.find('[id^=inputItemNetValue]').val());
 
-            var netValue = Number(formatToAmount(materialPrice * quantity - discountValue));
             var vatValue = Number(formatToAmount(netValue * (vatPercent / 100)));
             var finalValue = Number(formatToAmount(netValue + vatValue));
-            $parentElement.find('[id^=inputItemNetValue]').val(netValue);
             $parentElement.find('[id^=inputItemVatValue]').val(vatValue);
+            $parentElement.find('[id^=inputItemFinalValue]').val(finalValue);
+
+            calculateTotalValues();
+        });
+
+        $( "body" ).on("change", '[id^=inputItemVatValue]', function( event ) {
+            //Update the value
+            $(this).val($(this).val());
+
+            var $parentElement = $(this).parents('.card-body').first();
+            var netValue = Number($parentElement.find('[id^=inputItemNetValue]').val());
+
+            var vatValue = Number($(this).val());
+            var finalValue = Number(formatToAmount(netValue + vatValue));
             $parentElement.find('[id^=inputItemFinalValue]').val(finalValue);
 
             calculateTotalValues();
@@ -471,7 +460,6 @@
         function initiateDocumentTax(parentElement) {
             var $taxTypeDropdown = $(parentElement).find('[id^=inputTaxType]');
             var $taxCategoryDropdown = $(parentElement).find('[id^=inputTaxCategory]');
-            var $inputTaxAmount = $(parentElement).find('[id^=inputTaxAmount]');
 
             //Initiate the map which holds the messages from UI list
             if(Object.keys(taxCategoryTextMap).length === 0) {
@@ -496,12 +484,6 @@
             var type = $assignedTaxCategory.data('type') != null ? $assignedTaxCategory.data('type') : $assignedTaxType.val();
 
             $taxTypeDropdown.children('option[value="' + type + '"]').attr('selected','selected');
-
-            if(taxCategoryPercentMap[$assignedTaxCategory.val()] == null) {
-                $inputTaxAmount.removeAttr('readonly');
-            } else {
-                $inputTaxAmount.prop('readonly', true);
-            }
 
             $.each(taxCategoryMap[type], function(index, value) {
                 if($assignedTaxCategory.val() === value) {
@@ -550,7 +532,7 @@
                 var parentElement = $(taxElements[i]).parents('.card-body').first();
                 var taxCategory = $(parentElement).find('[id^=inputTaxCategory]').val();
                 var taxPercent = taxCategoryPercentMap[taxCategory];
-                if(taxPercent != null) {
+                if(taxPercent != null && $(taxElements[i]).val() === '') {
                     var taxValue = formatToAmount((Number(taxPercent)/100) * totalNetValue);
                     $(taxElements[i]).val(taxValue)
                 }
