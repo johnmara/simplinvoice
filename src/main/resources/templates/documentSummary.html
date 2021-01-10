@@ -17,6 +17,11 @@
         </div><!-- /.container-fluid -->
     </section>
 
+    <div class="callout callout-danger no-print" th:unless="${#lists.isEmpty(documentHeader.myDataErrorsList)}">
+        <h5 th:text="#{document.summary.mydata.error}"></h5>
+        <p th:text="${error}" th:each="error :${documentHeader.myDataErrorsList}"></p>
+    </div>
+
     <section class="content" th:with="isIssued=${documentHeader.type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED}">
         <div class="container-fluid">
             <div class="row">
@@ -35,10 +40,15 @@
                         <!-- this row will not appear when printing -->
                         <div class="row no-print">
                             <div class="col-12">
-                                <a th:if="${isIssued}" th:href="@{/document/issue/summary/public/__${documentHeader.authenticationCode}__}" rel="noopener" target="_blank" class="btn btn-default" th:inline="text"><i class="fas fa-eye"></i> [[#{document.summary.view.public}]]</a>
-                                <button type="button" id="pdfBtn" class="btn btn-primary float-right" style="margin-right: 5px;" th:inline="text">
-                                    <i class="fas fa-download"></i> [[#{document.summary.generate.pdf}]]
+                                <a th:if="${isIssued}" th:href="@{/document/issue/summary/public/__${documentHeader.authenticationCode}__}" rel="noopener" target="_blank" class="btn btn-default" th:inline="text">
+                                    <i class="fas fa-eye"></i> [[#{document.summary.view.public}]]
+                                </a>
+                                <button type="button" id="pdfBtn" class="btn btn-primary float-right" th:inline="text">
+                                    <i class="fas fa-file-pdf"></i> [[#{document.summary.generate.pdf}]]
                                 </button>
+                                <a th:if="${documentHeader.mydataXml}" th:href="@{/document/download/mydata/xml/__${documentHeader.id}__}" id="myDataBtn" class="btn btn-success float-right" style="margin-right: 5px;" th:inline="text">
+                                    <i class="fas fa-file-code"></i> [[#{document.summary.download.mydata.xml}]]
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -56,6 +66,7 @@
         $( "#pdfBtn" ).click(function() {
             window.print()
         });
+
     </script>
 </th:block>
 

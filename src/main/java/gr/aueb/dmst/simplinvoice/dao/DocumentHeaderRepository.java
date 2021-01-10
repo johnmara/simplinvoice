@@ -10,6 +10,8 @@ public interface DocumentHeaderRepository extends JpaRepository<DocumentHeader, 
 
     List<DocumentHeader> findAllByTypeAndCompanyProfileId(DocumentType documentType, Long companyProfileId);
 
+    List<DocumentHeader> findAllByTypeAndCompanyProfileIdAndMarkIsNull(DocumentType documentType, Long companyProfileId);
+
     DocumentHeader findDocumentHeaderByIdAndCompanyProfileId(Long id, Long companyProfileId);
 
     DocumentHeader findDocumentHeaderById(Long id);

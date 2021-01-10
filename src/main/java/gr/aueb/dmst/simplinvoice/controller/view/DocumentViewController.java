@@ -7,10 +7,12 @@ import gr.aueb.dmst.simplinvoice.model.*;
 import gr.aueb.dmst.simplinvoice.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
@@ -134,6 +136,36 @@ public class DocumentViewController extends AbstractViewController {
         model.addAttribute("documentHeader", documentHeader);
 
         return "documentIssueSummaryPublic";
+    }
+
+    @GetMapping(value = "/download/mydata/xml/{id}")
+    public ResponseEntity<byte[]> downloadMydataXml(@PathVariable Long id, HttpServletRequest request) {
+
+        CompanyProfile companyProfile = Utils.getUserFromHttpServletRequest(request).getCompanyProfile();
+
+        DocumentHeader documentHeader = documentService.getDocumentHeaderById(id, companyProfile.getId());
+        String text = documentHeader.getMydataXml();
+
+        byte[] contents = text.getBytes();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.TEXT_XML);
+        // Here you have to set the actual filename of your pdf
+        String filename = "document-id-" + documentHeader.getId() + ".xml";
+        headers.setContentDispositionFormData(filename, filename);
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+        return new ResponseEntity<>(contents, headers, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/forward/unsent/mydata")
+    ResponseEntity forwardUnsentToMydata(HttpServletRequest request) {
+
+        CompanyProfile companyProfile = Utils.getUserFromHttpServletRequest(request).getCompanyProfile();
+
+        documentService.forwardUnsentToMydata(companyProfile.getId());
+
+
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping(value = "/issue/save")

@@ -4,14 +4,19 @@
                                         (${type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED} ? #{document.add.list.page.title} : #{document.receive.list.page.title})"></title>
 
     <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper" th:fragment="container">
+    <div class="content-wrapper" th:fragment="container" th:with="isIssued=${type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED}">
 
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 th:text="${type == T(gr.aueb.dmst.simplinvoice.enums.DocumentType).ISSUED} ? #{document.add.list.page.title} : #{document.receive.list.page.title}">DataTables</h1>
+                        <h1 th:text="${isIssued} ? #{document.add.list.page.title} : #{document.receive.list.page.title}">DataTables</h1>
+                    </div>
+                    <div th:if="${isIssued}" class="col-sm-6">
+                        <button type="submit" id="forwardUnsentMydata" class="btn btn-info float-sm-right" th:text="#{document.list.unsent.to.mydata}">Send to MyDATA</button>
+<!--                        <form th:action="@{/document/forward/unsent/mydata}">-->
+<!--                        </form>-->
                     </div>
                 </div>
             </div><!-- /.container-fluid -->
@@ -111,6 +116,22 @@
                         }
                     ]
                 }).buttons().container().appendTo('#documentsList_wrapper .col-md-6:eq(0)');
+            });
+
+            $( "body" ).on("click", '#forwardUnsentMydata', function( event ) {
+                $.post( "/document/forward/unsent/mydata", function( data ) {
+                    var Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 5000
+                    });
+
+                    Toast.fire({
+                        icon: 'success',
+                        title: /*[[#{document.list.unsent.to.mydata.message}]]*/
+                    })
+                });
             });
         </script>
 

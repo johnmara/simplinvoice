@@ -4,26 +4,37 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import generated.ResponseDoc;
 import gr.aueb.dmst.simplinvoice.Utils;
+import gr.aueb.dmst.simplinvoice.client.MyDataRestClient;
 import gr.aueb.dmst.simplinvoice.dao.DocumentHeaderRepository;
 import gr.aueb.dmst.simplinvoice.dao.DocumentItemRepository;
 import gr.aueb.dmst.simplinvoice.dao.DocumentSeriesRepository;
 import gr.aueb.dmst.simplinvoice.dao.DocumentTaxRepository;
 import gr.aueb.dmst.simplinvoice.enums.DocumentType;
+import gr.aueb.dmst.simplinvoice.exception.MydataValidationException;
 import gr.aueb.dmst.simplinvoice.model.DocumentHeader;
 import gr.aueb.dmst.simplinvoice.model.DocumentItem;
 import gr.aueb.dmst.simplinvoice.model.DocumentTax;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.xml.sax.SAXException;
 
 import javax.transaction.Transactional;
+import javax.xml.bind.JAXBException;
 import java.awt.image.BufferedImage;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DocumentService {
+
+    Logger logger = LoggerFactory.getLogger(DocumentService.class);
 
     @Autowired
     DocumentHeaderRepository documentHeaderRepository;
@@ -38,17 +49,18 @@ public class DocumentService {
     DocumentSeriesRepository documentSeriesRepository;
 
     @Autowired
-    DocumentToInvoiceDocConverter documentToInvoiceDocConverter;
+    MyDataConverterService myDataConverterService;
+
+    @Autowired
+    MyDataRestClient myDataRestClient;
 
     public DocumentHeader getDocumentHeaderById(Long id, Long companyProfileId) {
+        DocumentHeader documentHeader = documentHeaderRepository.findDocumentHeaderById(id);
         return documentHeaderRepository.findDocumentHeaderByIdAndCompanyProfileId(id, companyProfileId);
     }
 
     public DocumentHeader getDocumentHeaderPublic(String authenticationCode, String requestUrl) throws Exception {
         DocumentHeader documentHeader = documentHeaderRepository.findDocumentHeaderByAuthenticationCode(authenticationCode);
-
-        documentToInvoiceDocConverter.convertDocumentToInvoiceDoc(documentHeader);
-        documentToInvoiceDocConverter.retrieveDataFromResponseObject(documentHeader);
 
         BufferedImage bufferedImage = generateQRCodeImage(requestUrl);
 
@@ -57,7 +69,6 @@ public class DocumentService {
 
         return documentHeader;
     }
-
 
     public List<DocumentHeader> getDocumentsList(DocumentType documentType, Long companyProfileId) {
         return documentHeaderRepository.findAllByTypeAndCompanyProfileId(documentType, companyProfileId);
@@ -89,7 +100,7 @@ public class DocumentService {
             }
 
         if(isNewEntry && documentHeader.getType().equals(DocumentType.ISSUED)) {
-            sendToMyData(documentHeader);
+            sendToMyData(Collections.singletonList(documentHeader), documentHeader.getCompanyProfile().getId());
         }
 
         return documentHeader;
@@ -100,12 +111,59 @@ public class DocumentService {
         documentSeriesRepository.save(documentHeader.getDocumentSeries());
     }
 
-    public void sendToMyData(DocumentHeader documentHeader) {
-        documentHeader.setMark(Utils.generateMockMyDataMark());
-        documentHeader.setUid(Utils.createMyDataUid(documentHeader));
-        documentHeader.setAuthenticationCode(Utils.createMyDataAuthenticationCode(documentHeader));
+    public void forwardUnsentToMydata(Long companyProfileId) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<DocumentHeader> unsentDocuments = documentHeaderRepository.
+                        findAllByTypeAndCompanyProfileIdAndMarkIsNull(DocumentType.ISSUED, companyProfileId);
 
-        documentHeaderRepository.save(documentHeader);
+                sendToMyData(unsentDocuments, companyProfileId);
+            }
+        }).start();
+    }
+
+    public void sendToMyData(List<DocumentHeader> documentHeaderList, Long companyProfileId) {
+
+        if(documentHeaderList.size() == 0)
+            return;
+
+        String invoicesXml;
+        ResponseDoc responseDoc;
+
+        try {
+            invoicesXml = myDataConverterService.convertDocumentToXml(documentHeaderList);
+            responseDoc = myDataRestClient.sendInvoiceDoc(invoicesXml, companyProfileId);
+        } catch (JAXBException | IOException | SAXException ex) {
+            logger.error("Error during constructing xml for myData");
+            return;
+        } catch (URISyntaxException | HttpStatusCodeException ex) {
+            logger.error("Error during sending xml to myData");
+            return;
+        } catch (MydataValidationException ex) {
+            logger.error("Error during validation xml for myData", ex);
+            return;
+        }
+
+        responseDoc.getResponse().forEach(responseType -> {
+            int index = responseType.getIndex() - 1;
+            DocumentHeader documentHeader = documentHeaderList.get(index);
+
+            if(responseType.getErrors() == null) {
+                documentHeader.setMark(String.valueOf(responseType.getInvoiceMark()));
+                documentHeader.setUid(responseType.getInvoiceUid());
+                documentHeader.setAuthenticationCode(responseType.getAuthenticationCode());
+
+            } else {
+                List<String> documentErrors = responseType.getErrors().getError().stream().map(f -> f.getCode() + " - " + f.getMessage())
+                        .collect(Collectors.toList());
+                documentHeader.setMyDataErrorsList(documentErrors);
+            }
+
+            documentHeaderRepository.save(documentHeader);
+        });
+
+
     }
 
     public BufferedImage generateQRCodeImage(String requestUrl) throws Exception {

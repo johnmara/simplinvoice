@@ -3,19 +3,42 @@ package gr.aueb.dmst.simplinvoice.service;
 import generated.ResponseDoc;
 import gr.aade.mydata.invoice.v1.*;
 import gr.aueb.dmst.simplinvoice.XmlUtils;
+import gr.aueb.dmst.simplinvoice.dao.DocumentHeaderRepository;
+import gr.aueb.dmst.simplinvoice.enums.MydataEntitiesEnum;
+import gr.aueb.dmst.simplinvoice.exception.MydataValidationException;
 import gr.aueb.dmst.simplinvoice.model.DocumentHeader;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 @Service
-public class DocumentToInvoiceDocConverter {
+public class MyDataConverterService {
 
-    public String convertDocumentToInvoiceDoc(DocumentHeader documentHeader) throws JAXBException, IOException {
+    @Autowired
+    DocumentHeaderRepository documentHeaderRepository;
 
+    public String convertDocumentToXml(List<DocumentHeader> documentHeaderList) throws JAXBException, IOException, SAXException, MydataValidationException {
         InvoicesDoc invoicesDoc = new InvoicesDoc();
-        invoicesDoc.getInvoice().add(new AadeBookInvoiceType());
+
+        documentHeaderList.forEach(documentHeader -> {
+            AadeBookInvoiceType invoiceType = convertSingleDocument(documentHeader);
+            addMyDataXmlToDocumentHeader(documentHeader, invoiceType);
+            invoicesDoc.getInvoice().add(invoiceType);
+        });
+
+        String generatedXml = XmlUtils.convertToxml(invoicesDoc);
+        XmlUtils.validate(generatedXml, MydataEntitiesEnum.INVOICES_DOC);
+
+        return generatedXml;
+    }
+
+    private AadeBookInvoiceType convertSingleDocument(DocumentHeader documentHeader) {
+        AadeBookInvoiceType aadeBookInvoiceType = new AadeBookInvoiceType();
 
         //Counterpart
         PartyType counterpart = new PartyType();
@@ -29,9 +52,9 @@ public class DocumentToInvoiceDocConverter {
         counterpart.getAddress().setPostalCode(documentHeader.getCounterPart().getPostalCode());
         counterpart.getAddress().setCity(documentHeader.getCounterPart().getTown());
 
-        invoicesDoc.getInvoice().get(0).setCounterpart(counterpart);
+        aadeBookInvoiceType.setCounterpart(counterpart);
 
-        //Counterpart
+        //Issuer
         PartyType issuer = new PartyType();
         issuer.setVatNumber(documentHeader.getCompanyProfile().getAfm());
         issuer.setCountry(CountryType.valueOf(documentHeader.getCompanyProfile().getCountry()));
@@ -43,14 +66,29 @@ public class DocumentToInvoiceDocConverter {
         issuer.getAddress().setPostalCode(documentHeader.getCompanyProfile().getPostalCode());
         issuer.getAddress().setCity(documentHeader.getCompanyProfile().getTown());
 
-        invoicesDoc.getInvoice().get(0).setCounterpart(issuer);
+        aadeBookInvoiceType.setIssuer(issuer);
 
-        String generatedXml = XmlUtils.marshal(invoicesDoc);
-
-        return generatedXml;
+        return aadeBookInvoiceType;
     }
 
-    public DocumentHeader retrieveDataFromResponseObject(DocumentHeader documentHeader) throws JAXBException, IOException {
+    private void addMyDataXmlToDocumentHeader(DocumentHeader documentHeader, AadeBookInvoiceType aadeBookInvoiceType) {
+        InvoicesDoc invoicesDoc = new InvoicesDoc();
+        invoicesDoc.getInvoice().add(aadeBookInvoiceType);
+
+        try {
+            String xmlText = XmlUtils.convertToxml(invoicesDoc);
+            documentHeader.setMydataXml(xmlText);
+            XmlUtils.validate(xmlText, MydataEntitiesEnum.INVOICES_DOC);
+        } catch (MydataValidationException ex) {
+            documentHeader.setMyDataErrorsList(Collections.singletonList(ex.getMessage()));
+        } catch (Exception ex) {}
+        finally {
+          documentHeaderRepository.save(documentHeader);
+        }
+
+    }
+
+    public DocumentHeader retrieveDataFromResponseObject(DocumentHeader documentHeader) throws JAXBException, IOException, SAXException, MydataValidationException {
         String response = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
                 "<ResponseDoc xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n" +
                 "  <response>\n" +
@@ -62,7 +100,7 @@ public class DocumentToInvoiceDocConverter {
                 "  </response>\n" +
                 "</ResponseDoc>";
 
-        ResponseDoc responseDoc = XmlUtils.unmarshall(response, ResponseDoc.class);
+        ResponseDoc responseDoc = XmlUtils.parseXml(response, MydataEntitiesEnum.RESPONSE);
 
         return documentHeader;
     }

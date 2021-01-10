@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -61,6 +62,13 @@ public class DocumentHeader {
     @OneToOne
     @JoinColumn(name = "trader_id", referencedColumnName = "id")
     private Trader counterPart;
+
+    @Lob
+    @Column
+    private String mydataXml;
+
+    @ElementCollection
+    private List<String> myDataErrorsList;
 
     public Long getId() {
         return id;
@@ -244,5 +252,21 @@ public class DocumentHeader {
 
     public void setDocumentCustomId(String documentCustomId) {
         this.documentCustomId = documentCustomId;
+    }
+
+    public String getMydataXml() {
+        return mydataXml;
+    }
+
+    public void setMydataXml(String mydataXml) {
+        this.mydataXml = mydataXml;
+    }
+
+    public List<String> getMyDataErrorsList() {
+        return myDataErrorsList;
+    }
+
+    public void setMyDataErrorsList(List<String> myDataErrorsList) {
+        this.myDataErrorsList = myDataErrorsList;
     }
 }
