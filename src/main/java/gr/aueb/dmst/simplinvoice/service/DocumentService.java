@@ -132,7 +132,7 @@ public class DocumentService {
         ResponseDoc responseDoc;
 
         try {
-            invoicesXml = myDataConverterService.convertDocumentToXml(documentHeaderList);
+            invoicesXml = myDataConverterService.convertDocumentsToXml(documentHeaderList);
             responseDoc = myDataRestClient.sendInvoiceDoc(invoicesXml, companyProfileId);
         } catch (JAXBException | IOException | SAXException ex) {
             logger.error("Error during constructing xml for myData");

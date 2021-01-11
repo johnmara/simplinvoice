@@ -1,9 +1,10 @@
 package gr.aueb.dmst.simplinvoice.service;
 
-import generated.ResponseDoc;
 import gr.aade.mydata.invoice.v1.*;
+import gr.aueb.dmst.simplinvoice.Utils;
 import gr.aueb.dmst.simplinvoice.XmlUtils;
 import gr.aueb.dmst.simplinvoice.dao.DocumentHeaderRepository;
+import gr.aueb.dmst.simplinvoice.enums.AadeDocumentTaxCategory;
 import gr.aueb.dmst.simplinvoice.enums.MydataEntitiesEnum;
 import gr.aueb.dmst.simplinvoice.exception.MydataValidationException;
 import gr.aueb.dmst.simplinvoice.model.DocumentHeader;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 
+import javax.transaction.Transactional;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.util.Collections;
@@ -22,7 +24,7 @@ public class MyDataConverterService {
     @Autowired
     DocumentHeaderRepository documentHeaderRepository;
 
-    public String convertDocumentToXml(List<DocumentHeader> documentHeaderList) throws JAXBException, IOException, SAXException, MydataValidationException {
+    public String convertDocumentsToXml(List<DocumentHeader> documentHeaderList) throws JAXBException, IOException, SAXException, MydataValidationException {
         InvoicesDoc invoicesDoc = new InvoicesDoc();
 
         documentHeaderList.forEach(documentHeader -> {
@@ -32,12 +34,12 @@ public class MyDataConverterService {
         });
 
         String generatedXml = XmlUtils.convertToxml(invoicesDoc);
-        XmlUtils.validate(generatedXml, MydataEntitiesEnum.INVOICES_DOC);
+//        XmlUtils.validate(generatedXml, MydataEntitiesEnum.INVOICES_DOC);
 
         return generatedXml;
     }
 
-    private AadeBookInvoiceType convertSingleDocument(DocumentHeader documentHeader) {
+    AadeBookInvoiceType convertSingleDocument(DocumentHeader documentHeader) {
         AadeBookInvoiceType aadeBookInvoiceType = new AadeBookInvoiceType();
 
         //Counterpart
@@ -68,6 +70,53 @@ public class MyDataConverterService {
 
         aadeBookInvoiceType.setIssuer(issuer);
 
+        //Invoice Header
+        InvoiceHeaderType invoiceHeaderType = new InvoiceHeaderType();
+        invoiceHeaderType.setSeries(documentHeader.getDocumentSeries().getCode());
+        invoiceHeaderType.setAa(String.valueOf(documentHeader.getNumber()));
+        invoiceHeaderType.setIssueDate(Utils.convertDateToXmlGregorianCalendar(documentHeader.getDate()));
+        invoiceHeaderType.setInvoiceType(documentHeader.getDocumentSeries().getAadeInvoiceType().aadeCode);
+        invoiceHeaderType.setVatPaymentSuspension(false);
+        invoiceHeaderType.setCurrency(CurrencyType.valueOf(documentHeader.getCurrency()));
+        invoiceHeaderType.setSelfPricing(false);
+
+        aadeBookInvoiceType.setInvoiceHeader(invoiceHeaderType);
+
+        //Payment methods
+        AadeBookInvoiceType.PaymentMethods paymentMethods = new AadeBookInvoiceType.PaymentMethods();
+        PaymentMethodDetailType paymentMethodDetailType = new PaymentMethodDetailType();
+        paymentMethodDetailType.setType(Integer.parseInt(documentHeader.getPaymentMethod().aadeCode));
+        paymentMethodDetailType.setAmount(documentHeader.getTotalFinalValue());
+
+        paymentMethods.getPaymentMethodDetails().add(paymentMethodDetailType);
+        aadeBookInvoiceType.setPaymentMethods(paymentMethods);
+
+        //Invoice Details
+
+        //Taxes Total
+        AadeBookInvoiceType.TaxesTotals taxesTotals = new AadeBookInvoiceType.TaxesTotals();
+//        taxesTotals.getTaxes().add
+        aadeBookInvoiceType.setTaxesTotals(taxesTotals);
+
+        //Invoice Summary
+        InvoiceSummaryType invoiceSummaryType = new InvoiceSummaryType();
+        invoiceSummaryType.setTotalNetValue(documentHeader.getTotalNetValue());
+        invoiceSummaryType.setTotalVatAmount(documentHeader.getTotalVatValue());
+
+        invoiceSummaryType.setTotalWithheldAmount(
+                Utils.getAadeDocumentTaxTypeTotalValue(documentHeader.getDocumentTaxes(), AadeDocumentTaxCategory.AadeDocumentTaxType.AADE_TAX_TYPE_1));
+        invoiceSummaryType.setTotalFeesAmount(
+                Utils.getAadeDocumentTaxTypeTotalValue(documentHeader.getDocumentTaxes(), AadeDocumentTaxCategory.AadeDocumentTaxType.AADE_TAX_TYPE_2));
+        invoiceSummaryType.setTotalStampDutyAmount(
+                Utils.getAadeDocumentTaxTypeTotalValue(documentHeader.getDocumentTaxes(), AadeDocumentTaxCategory.AadeDocumentTaxType.AADE_TAX_TYPE_4));
+        invoiceSummaryType.setTotalOtherTaxesAmount(
+                Utils.getAadeDocumentTaxTypeTotalValue(documentHeader.getDocumentTaxes(), AadeDocumentTaxCategory.AadeDocumentTaxType.AADE_TAX_TYPE_3));
+        invoiceSummaryType.setTotalDeductionsAmount(
+                Utils.getAadeDocumentTaxTypeTotalValue(documentHeader.getDocumentTaxes(), AadeDocumentTaxCategory.AadeDocumentTaxType.AADE_TAX_TYPE_5));
+        invoiceSummaryType.setTotalGrossValue(documentHeader.getTotalFinalValue());
+
+        aadeBookInvoiceType.setInvoiceSummary(invoiceSummaryType);
+
         return aadeBookInvoiceType;
     }
 
@@ -86,23 +135,6 @@ public class MyDataConverterService {
           documentHeaderRepository.save(documentHeader);
         }
 
-    }
-
-    public DocumentHeader retrieveDataFromResponseObject(DocumentHeader documentHeader) throws JAXBException, IOException, SAXException, MydataValidationException {
-        String response = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                "<ResponseDoc xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n" +
-                "  <response>\n" +
-                "    <index>1</index>\n" +
-                "    <invoiceUid>9078A518B1E197DC645C44DDF8C286A58C1CCBE0</invoiceUid>\n" +
-                "    <invoiceMark>400001829527564</invoiceMark>\n" +
-                "    <authenticationCode>1E7D139EF4C0D34415094D3DF57F6670D783662D</authenticationCode>\n" +
-                "    <statusCode>Success</statusCode>\n" +
-                "  </response>\n" +
-                "</ResponseDoc>";
-
-        ResponseDoc responseDoc = XmlUtils.parseXml(response, MydataEntitiesEnum.RESPONSE);
-
-        return documentHeader;
     }
 
 }

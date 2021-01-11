@@ -1,11 +1,12 @@
 package gr.aueb.dmst.simplinvoice.model;
 
 import gr.aueb.dmst.simplinvoice.enums.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -54,9 +55,11 @@ public class DocumentHeader {
     private DocumentSeries documentSeries;
 
     @OneToMany(mappedBy = "documentHeader", cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<DocumentTax> documentTaxes;
 
     @OneToMany(mappedBy = "documentHeader", cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<DocumentItem> documentItems;
 
     @OneToOne

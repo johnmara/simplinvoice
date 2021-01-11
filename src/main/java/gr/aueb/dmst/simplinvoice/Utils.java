@@ -1,19 +1,29 @@
 package gr.aueb.dmst.simplinvoice;
 
+import gr.aueb.dmst.simplinvoice.enums.AadeDocumentTaxCategory;
 import gr.aueb.dmst.simplinvoice.model.CustomUserDetails;
 import gr.aueb.dmst.simplinvoice.model.DocumentHeader;
+import gr.aueb.dmst.simplinvoice.model.DocumentTax;
 import gr.aueb.dmst.simplinvoice.model.User;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.request.WebRequest;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -78,6 +88,26 @@ public class Utils {
         ImageIO.write(bi, format, baos);
         byte[] bytes = baos.toByteArray();
         return bytes;
+    }
+
+    public static XMLGregorianCalendar convertDateToXmlGregorianCalendar(Date date) {
+        GregorianCalendar c = new GregorianCalendar();
+        c.setTime(date);
+        try {
+            return DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
+        } catch (DatatypeConfigurationException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static BigDecimal getAadeDocumentTaxTypeTotalValue(List<DocumentTax> documentTaxes, AadeDocumentTaxCategory.AadeDocumentTaxType type) {
+        if(ObjectUtils.isEmpty(documentTaxes))
+            return BigDecimal.ZERO;
+
+        return documentTaxes.stream().filter(it -> it.getType().type.equals(type))
+                .map(DocumentTax::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
 }
