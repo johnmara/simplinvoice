@@ -55,7 +55,6 @@ public class DocumentService {
     MyDataRestClient myDataRestClient;
 
     public DocumentHeader getDocumentHeaderById(Long id, Long companyProfileId) {
-        DocumentHeader documentHeader = documentHeaderRepository.findDocumentHeaderById(id);
         return documentHeaderRepository.findDocumentHeaderByIdAndCompanyProfileId(id, companyProfileId);
     }
 
@@ -112,15 +111,19 @@ public class DocumentService {
     }
 
     public void forwardUnsentToMydata(Long companyProfileId) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<DocumentHeader> unsentDocuments = documentHeaderRepository.
-                        findAllByTypeAndCompanyProfileIdAndMarkIsNull(DocumentType.ISSUED, companyProfileId);
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                List<DocumentHeader> unsentDocuments = documentHeaderRepository.
+//                        findAllByTypeAndCompanyProfileIdAndMarkIsNull(DocumentType.ISSUED, companyProfileId);
+//
+//                sendToMyData(unsentDocuments, companyProfileId);
+//            }
+//        }).start();
+        List<DocumentHeader> unsentDocuments = documentHeaderRepository.
+                findAllByTypeAndCompanyProfileIdAndMarkIsNull(DocumentType.ISSUED, companyProfileId);
 
-                sendToMyData(unsentDocuments, companyProfileId);
-            }
-        }).start();
+        sendToMyData(unsentDocuments, companyProfileId);
     }
 
     public void sendToMyData(List<DocumentHeader> documentHeaderList, Long companyProfileId) {

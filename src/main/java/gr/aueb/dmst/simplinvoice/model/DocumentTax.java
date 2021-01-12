@@ -13,7 +13,7 @@ public class DocumentTax {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private AadeDocumentTaxCategory type;
+    private AadeDocumentTaxCategory category;
     @Transient
     private BigDecimal underlyingValue;
     private BigDecimal amount;
@@ -30,16 +30,26 @@ public class DocumentTax {
         this.id = id;
     }
 
-    public AadeDocumentTaxCategory getType() {
-        return type;
+    public AadeDocumentTaxCategory getCategory() {
+        return category;
     }
 
-    public void setType(AadeDocumentTaxCategory type) {
-        this.type = type;
+    public void setCategory(AadeDocumentTaxCategory type) {
+        this.category = type;
     }
 
     public BigDecimal getUnderlyingValue() {
         return underlyingValue;
+    }
+
+    public BigDecimal calculateUnderlyingValue() {
+        if(this.amount == null || this.amount.equals(BigDecimal.ZERO))
+            return null;
+        if (this.category.percent == null)
+            return null;
+
+        return this.amount.multiply(new BigDecimal(100)).divide(this.category.percent);
+
     }
 
     public void setUnderlyingValue(BigDecimal underlyingValue) {

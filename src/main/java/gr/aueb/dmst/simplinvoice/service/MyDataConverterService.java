@@ -5,18 +5,24 @@ import gr.aueb.dmst.simplinvoice.Utils;
 import gr.aueb.dmst.simplinvoice.XmlUtils;
 import gr.aueb.dmst.simplinvoice.dao.DocumentHeaderRepository;
 import gr.aueb.dmst.simplinvoice.enums.AadeDocumentTaxCategory;
+import gr.aueb.dmst.simplinvoice.enums.MeasurementUnit;
 import gr.aueb.dmst.simplinvoice.enums.MydataEntitiesEnum;
+import gr.aueb.dmst.simplinvoice.enums.VatCategory;
 import gr.aueb.dmst.simplinvoice.exception.MydataValidationException;
 import gr.aueb.dmst.simplinvoice.model.DocumentHeader;
+import gr.aueb.dmst.simplinvoice.model.DocumentItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.xml.sax.SAXException;
 
-import javax.transaction.Transactional;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class MyDataConverterService {
@@ -34,7 +40,7 @@ public class MyDataConverterService {
         });
 
         String generatedXml = XmlUtils.convertToxml(invoicesDoc);
-//        XmlUtils.validate(generatedXml, MydataEntitiesEnum.INVOICES_DOC);
+        XmlUtils.validate(generatedXml, MydataEntitiesEnum.INVOICES_DOC);
 
         return generatedXml;
     }
@@ -92,11 +98,74 @@ public class MyDataConverterService {
         aadeBookInvoiceType.setPaymentMethods(paymentMethods);
 
         //Invoice Details
+        Map<VatCategory, List<DocumentItem>> vatItemsMap = documentHeader.getDocumentItems().stream()
+                .collect(Collectors.groupingBy(it -> it.getMaterial().getVatCategory()));
+
+        int index = 1;
+        for (Map.Entry<VatCategory, List<DocumentItem>> entry : vatItemsMap.entrySet()) {
+            boolean singleItem = entry.getValue().size() == 1;
+            VatCategory vatCategory = entry.getValue().get(0).getMaterial().getVatCategory();
+
+            InvoiceRowType invoiceRowType = new InvoiceRowType();
+            invoiceRowType.setLineNumber(index++);
+
+            boolean sameMeasurementUnit = entry.getValue().stream().map(it -> it.getMaterial().getMeasurementUnit())
+                    .distinct()
+                    .count() <= 1;
+
+            if(sameMeasurementUnit || singleItem) {
+                MeasurementUnit measurementUnit = entry.getValue().get(0).getMaterial().getMeasurementUnit();
+                if(measurementUnit != null) {
+                    BigDecimal quantitySum = entry.getValue().stream().map(DocumentItem::getQuantity).reduce(BigDecimal.ZERO, BigDecimal::add);
+                    invoiceRowType.setQuantity(quantitySum);
+                    invoiceRowType.setMeasurementUnit(Integer.parseInt(measurementUnit.aadeCode));
+                }
+            }
+
+            if(singleItem) {
+               invoiceRowType.setNetValue(entry.getValue().get(0).getNetValue());
+               invoiceRowType.setVatAmount(entry.getValue().get(0).getVatValue());
+            } else {
+                BigDecimal netValueSum = entry.getValue().stream()
+                        .map(DocumentItem::getNetValue).reduce(BigDecimal.ZERO, BigDecimal::add);
+                invoiceRowType.setNetValue(netValueSum);
+                BigDecimal vatValueSum = entry.getValue().stream()
+                        .map(DocumentItem::getVatValue).reduce(BigDecimal.ZERO, BigDecimal::add);
+                invoiceRowType.setVatAmount(vatValueSum);
+            }
+
+            invoiceRowType.setVatCategory(Integer.parseInt(vatCategory.aadeCode));
+
+
+            boolean sameDiscount = entry.getValue().stream().map(DocumentItem::getDiscountValue).allMatch(it -> it == null || it.equals(BigDecimal.ZERO));
+
+            if(sameDiscount || singleItem) {
+                BigDecimal discountValue = entry.getValue().get(0).getDiscountValue();
+                invoiceRowType.setDiscountOption(discountValue != null && !discountValue.equals(BigDecimal.ZERO));
+            }
+
+            if(vatCategory.equals(VatCategory.VAT_0)) {
+                invoiceRowType.setVatExemptionCategory(Integer.parseInt(documentHeader.getVatExemptionType().aadeCode));
+            }
+
+            aadeBookInvoiceType.getInvoiceDetails().add(invoiceRowType);
+        }
+
 
         //Taxes Total
-        AadeBookInvoiceType.TaxesTotals taxesTotals = new AadeBookInvoiceType.TaxesTotals();
-//        taxesTotals.getTaxes().add
-        aadeBookInvoiceType.setTaxesTotals(taxesTotals);
+        if(!ObjectUtils.isEmpty(documentHeader.getDocumentTaxes())) {
+            AadeBookInvoiceType.TaxesTotals taxesTotals = new AadeBookInvoiceType.TaxesTotals();
+            documentHeader.getDocumentTaxes().forEach(tax -> {
+                TaxTotalsType taxTotalsType = new TaxTotalsType();
+                taxTotalsType.setTaxType(Byte.parseByte(tax.getCategory().type.aadeCode));
+                if(tax.getCategory().aadeCode != null)
+                    taxTotalsType.setTaxCategory(Byte.parseByte(tax.getCategory().aadeCode));
+                taxTotalsType.setUnderlyingValue(tax.calculateUnderlyingValue());
+                taxTotalsType.setTaxAmount(tax.getAmount());
+                taxesTotals.getTaxes().add(taxTotalsType);
+            });
+            aadeBookInvoiceType.setTaxesTotals(taxesTotals);
+        }
 
         //Invoice Summary
         InvoiceSummaryType invoiceSummaryType = new InvoiceSummaryType();

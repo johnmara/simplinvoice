@@ -55,11 +55,11 @@ public class DocumentHeader {
     private DocumentSeries documentSeries;
 
     @OneToMany(mappedBy = "documentHeader", cascade = CascadeType.ALL)
-    @LazyCollection(LazyCollectionOption.FALSE)
+//    @LazyCollection(LazyCollectionOption.FALSE)
     private List<DocumentTax> documentTaxes;
 
     @OneToMany(mappedBy = "documentHeader", cascade = CascadeType.ALL)
-    @LazyCollection(LazyCollectionOption.FALSE)
+//    @LazyCollection(LazyCollectionOption.FALSE)
     private List<DocumentItem> documentItems;
 
     @OneToOne

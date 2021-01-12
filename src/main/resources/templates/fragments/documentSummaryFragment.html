@@ -104,8 +104,8 @@
                     </thead>
                     <tbody>
                     <tr th:each="documentTax, itemStat: ${documentHeader.documentTaxes}">
-                        <td th:text="#{'aade.tax.type.' + ${documentTax.type.type}}"></td>
-                        <td th:text="#{'aade.tax.category.' + ${documentTax.type}}"></td>
+                        <td th:text="#{'aade.tax.type.' + ${documentTax.category.type}}"></td>
+                        <td th:text="#{'aade.tax.category.' + ${documentTax.category}}"></td>
                         <td th:text="${documentTax.amount}"></td>
                     </tr>
                     </tbody>
@@ -256,8 +256,8 @@
                     </thead>
                     <tbody>
                     <tr th:each="documentTax, itemStat: ${documentHeader.documentTaxes}">
-                        <td th:text="#{'aade.tax.type.' + ${documentTax.type.type}}"></td>
-                        <td th:text="#{'aade.tax.category.' + ${documentTax.type}}"></td>
+                        <td th:text="#{'aade.tax.type.' + ${documentTax.category.type}}"></td>
+                        <td th:text="#{'aade.tax.category.' + ${documentTax.category}}"></td>
                         <td th:text="${documentTax.amount}"></td>
                     </tr>
                     </tbody>
