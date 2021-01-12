@@ -10,6 +10,7 @@ public enum VatCategory {
         VAT_9("5", new BigDecimal("9")),
         VAT_4("6", new BigDecimal("4")),
         VAT_0("7", BigDecimal.ZERO);
+        //aadeCode == 8 in case of logistikes eggrafes
 
         public final String aadeCode;
         public final BigDecimal value;

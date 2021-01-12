@@ -118,7 +118,7 @@
                                             <div class="card-body pt-0">
                                                 <div class="form-group row">
                                                     <div class="col-sm-6">
-                                                        <select th:id="'inputTaxType' + ${itemStat.index}" class="form-control" required th:with="documentTaxToCheck=${documentHeader.documentTaxes[__${itemStat.index}__]?.type?.type}">
+                                                        <select th:id="'inputTaxType' + ${itemStat.index}" class="form-control" required th:with="documentTaxToCheck=${documentHeader.documentTaxes[__${itemStat.index}__]?.category?.type}">
                                                             <option th:value="${null}" th:text="#{dropdown.select}"></option>
                                                             <option th:each="taxType : ${T(gr.aueb.dmst.simplinvoice.enums.AadeDocumentTaxCategory$AadeDocumentTaxType).values()}"
                                                                     th:selected="${taxType.equals(documentTaxToCheck)}"
@@ -126,7 +126,7 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-sm-6">
-                                                        <select th:id="'inputTaxCategory' + ${itemStat.index}" class="form-control select2" required th:field="${documentHeader.documentTaxes[__${itemStat.index}__].type}">
+                                                        <select th:id="'inputTaxCategory' + ${itemStat.index}" class="form-control select2" required th:field="${documentHeader.documentTaxes[__${itemStat.index}__].category}">
                                                             <option th:value="${null}" th:text="#{dropdown.select}"></option>
                                                             <option th:each="taxCategory : ${T(gr.aueb.dmst.simplinvoice.enums.AadeDocumentTaxCategory).values()}"
                                                                     th:attr="data-taxCategoryValue=${taxCategory.percent},

@@ -47,7 +47,7 @@ public enum AadeDocumentTaxCategory {
         AADE_TAX_CAT_4_1("1", AADE_TAX_TYPE_4, new BigDecimal("1.2")),
         AADE_TAX_CAT_4_2("2", AADE_TAX_TYPE_4, new BigDecimal("2.4")),
         AADE_TAX_CAT_4_3("3", AADE_TAX_TYPE_4, new BigDecimal("3.6")),
-        AADE_TAX_CAT_5("1", AADE_TAX_TYPE_5, null);
+        AADE_TAX_CAT_5(null, AADE_TAX_TYPE_5, null);
 
         public final String aadeCode;
         public final AadeDocumentTaxCategory.AadeDocumentTaxType type;

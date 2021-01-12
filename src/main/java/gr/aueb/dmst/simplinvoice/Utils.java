@@ -105,7 +105,7 @@ public class Utils {
         if(ObjectUtils.isEmpty(documentTaxes))
             return BigDecimal.ZERO;
 
-        return documentTaxes.stream().filter(it -> it.getType().type.equals(type))
+        return documentTaxes.stream().filter(it -> it.getCategory().type.equals(type))
                 .map(DocumentTax::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
