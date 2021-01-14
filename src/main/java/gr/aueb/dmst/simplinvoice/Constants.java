@@ -24,4 +24,20 @@ public class Constants {
         aadeDocumentTaxCategoryMap =  Arrays.stream(AadeDocumentTaxCategory.values()).collect(Collectors.groupingBy(it->it.type));
     }
 
+    public static Map<Integer, String> monthMessagesMap = new HashMap<>();
+    static {
+        monthMessagesMap.put(1, "month.january");
+        monthMessagesMap.put(2, "month.february");
+        monthMessagesMap.put(3, "month.march");
+        monthMessagesMap.put(4, "month.april");
+        monthMessagesMap.put(5, "month.may");
+        monthMessagesMap.put(6, "month.june");
+        monthMessagesMap.put(7, "month.july");
+        monthMessagesMap.put(8, "month.august");
+        monthMessagesMap.put(9, "month.september");
+        monthMessagesMap.put(10, "month.october");
+        monthMessagesMap.put(11, "month.november");
+        monthMessagesMap.put(12, "month.december");
+    }
+
 }

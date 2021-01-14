@@ -9,7 +9,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Starter Page</h1>
+                        <h1 class="m-0" th:text="#{dashboard.title}">Dashboard</h1>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
@@ -20,73 +20,291 @@
         <div class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
+                    <div class="col-lg-3 col-6">
+                        <!-- small box -->
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3 th:inline="text">[[${totalRevenue}]]<sup style="font-size: 20px">€</sup></h3>
 
-                                <p class="card-text">
-                                    Some quick example text to build on the card title and make up the bulk of the
-                                    card's
-                                    content.
-                                </p>
-
-                                <a href="#" class="card-link">Card link</a>
-                                <a href="#" class="card-link">Another link</a>
+                                <p th:text="#{dashboard.revenue.total}">Income</p>
                             </div>
-                        </div>
-
-                        <div class="card card-primary card-outline">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-
-                                <p class="card-text">
-                                    Some quick example text to build on the card title and make up the bulk of the
-                                    card's
-                                    content.
-                                </p>
-                                <a href="#" class="card-link">Card link</a>
-                                <a href="#" class="card-link">Another link</a>
-                            </div>
-                        </div><!-- /.card -->
-                    </div>
-                    <!-- /.col-md-6 -->
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="m-0">Featured</h5>
-                            </div>
-                            <div class="card-body">
-                                <h6 class="card-title">Special title treatment</h6>
-
-                                <p class="card-text">With supporting text below as a natural lead-in to additional
-                                    content.</p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
-                            </div>
-                        </div>
-
-                        <div class="card card-primary card-outline">
-                            <div class="card-header">
-                                <h5 class="m-0">Featured</h5>
-                            </div>
-                            <div class="card-body">
-                                <h6 class="card-title">Special title treatment</h6>
-
-                                <p class="card-text">With supporting text below as a natural lead-in to additional
-                                    content.</p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                            <div class="icon">
+                                <i class="fas fa-cash-register"></i>
                             </div>
                         </div>
                     </div>
-                    <!-- /.col-md-6 -->
+                    <!-- ./col -->
+                    <div class="col-lg-3 col-6">
+                        <!-- small box -->
+                        <div class="small-box bg-success">
+                            <div class="inner">
+                                <h3 th:inline="text">[[${totalExpenses}]]<sup style="font-size: 20px">€</sup></h3>
+
+                                <p th:text="#{dashboard.expenses.total}">Outcome</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-shopping-basket"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ./col -->
                 </div>
                 <!-- /.row -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <!-- LINE CHART -->
+                        <div class="card card-info">
+                            <div class="card-header">
+                                <h3 class="card-title" th:text="#{dashboard.revenue.by.month}">Income By Month</h3>
+
+                            </div>
+                            <div class="card-body">
+                                <div class="chart">
+                                    <canvas id="lineChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <div class="col-md-6">
+                        <!-- LINE CHART -->
+                        <div class="card card-success">
+                            <div class="card-header">
+                                <h3 class="card-title" th:text="#{dashboard.expenses.by.month}">Outcome By Month</h3>
+
+                            </div>
+                            <div class="card-body">
+                                <div class="chart">
+                                    <canvas id="lineChart2" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <!-- BAR CHART -->
+                        <div class="card card-lightblue">
+                            <div class="card-header">
+                                <h3 class="card-title" th:text="#{dashboard.sales.by.product}">Sales By Product</h3>
+
+                            </div>
+                            <div class="card-body">
+                                <div class="chart">
+                                    <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <div class="col-md-6">
+                        <!-- PIE CHART -->
+                        <div class="card card-light">
+                            <div class="card-header">
+                                <h3 class="card-title" th:text="#{dashboard.invoice.by.supplier}">Invoice By Supplier</h3>
+
+                            </div>
+                            <div class="card-body">
+                                <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
             </div><!-- /.container-fluid -->
         </div>
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
 
-    <th:block th:fragment="pageCustomScript"/>
+    <th:block th:fragment="pageCustomScript">
+
+        <script th:inline="javascript">
+            revenueByMonthChart();
+            expensesByMonthChart();
+            productsSalesChart();
+            invoicesBySupplierChart();
+
+            function revenueByMonthChart () {
+                var revenueByMonthMap = [[${revenueByMonthMap}]];
+                var monthsLabels = Array.from(Object.keys(revenueByMonthMap));
+                var areaChartData = {
+                    labels  : monthsLabels,
+                    datasets: [
+                        {
+                            borderColor         : 'rgba(60,141,188,0.8)',
+                            pointColor          : '#3b8bba',
+                            pointStrokeColor    : 'rgba(60,141,188,1)',
+                            pointHighlightFill  : '#fff',
+                            pointHighlightStroke: 'rgba(60,141,188,1)',
+                            data                : Array.from(Object.values(revenueByMonthMap))
+                        },
+                    ]
+                }
+
+                var areaChartOptions = {
+                    maintainAspectRatio : false,
+                    responsive : true,
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            gridLines : {
+                                display : false,
+                            }
+                        }],
+                        yAxes: [{
+                            gridLines : {
+                                display : false,
+                            }
+                        }]
+                    }
+                }
+
+                var lineChartCanvas = $('#lineChart').get(0).getContext('2d')
+                var lineChartOptions = $.extend(true, {}, areaChartOptions)
+                var lineChartData = $.extend(true, {}, areaChartData)
+                lineChartData.datasets[0].fill = false;
+                lineChartOptions.datasetFill = false
+
+                var lineChart = new Chart(lineChartCanvas, {
+                    type: 'line',
+                    data: lineChartData,
+                    options: lineChartOptions
+                })
+
+            }
+
+            function expensesByMonthChart () {
+                var expensesByMonthMap = [[${expensesByMonthMap}]];
+                var monthsLabels = Array.from(Object.keys(expensesByMonthMap));
+                var areaChartData = {
+                    labels  : monthsLabels,
+                    datasets: [
+                        {
+                            borderColor         : 'rgba(60,141,188,0.8)',
+                            pointColor          : '#3b8bba',
+                            pointStrokeColor    : 'rgba(60,141,188,1)',
+                            pointHighlightFill  : '#fff',
+                            pointHighlightStroke: 'rgba(60,141,188,1)',
+                            data                : Array.from(Object.values(expensesByMonthMap))
+                        },
+                    ]
+                }
+
+                var areaChartOptions = {
+                    maintainAspectRatio : false,
+                    responsive : true,
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            gridLines : {
+                                display : false,
+                            }
+                        }],
+                        yAxes: [{
+                            gridLines : {
+                                display : false,
+                            }
+                        }]
+                    }
+                }
+
+                var lineChartCanvas = $('#lineChart2').get(0).getContext('2d')
+                var lineChartOptions = $.extend(true, {}, areaChartOptions)
+                var lineChartData = $.extend(true, {}, areaChartData)
+                lineChartData.datasets[0].fill = false;
+                lineChartOptions.datasetFill = false
+
+                var lineChart = new Chart(lineChartCanvas, {
+                    type: 'line',
+                    data: lineChartData,
+                    options: lineChartOptions
+                })
+
+            }
+
+            function productsSalesChart () {
+                var productsSalesMap = [[${productsSalesMap}]];
+                var productsLabel = Array.from(Object.keys(productsSalesMap));
+                var productsSales = Array.from(Object.values(productsSalesMap));
+
+                var barChartCanvas = $('#barChart').get(0).getContext('2d')
+                var barChartData = {
+                    labels  : productsLabel,
+                    datasets: [
+                        {
+                            data                : productsSales,
+                            backgroundColor     : 'rgba(60,141,188,0.9)',
+                        },
+                    ]
+                }
+
+                var barChartOptions = {
+                    responsive              : true,
+                    maintainAspectRatio     : false,
+                    datasetFill             : false,
+                    legend: {
+                        display: false
+                    },
+                }
+
+                new Chart(barChartCanvas, {
+                    type: 'bar',
+                    data: barChartData,
+                    options: barChartOptions
+                })
+
+            }
+
+            function invoicesBySupplierChart () {
+                var invoicesBySupplierMap = [[${invoicesBySupplierMap}]];
+                var suppliersLabels = Array.from(Object.keys(invoicesBySupplierMap));
+                var invoicesBySupplierColor = [];
+                for(var i in suppliersLabels) {
+                    invoicesBySupplierColor.push(dynamicColors());
+                }
+                var invoicesBySupplier = {
+                    labels: suppliersLabels,
+                    datasets: [
+                        {
+                            data: Array.from(Object.values(invoicesBySupplierMap)),
+                            backgroundColor : invoicesBySupplierColor
+                        }
+                    ]
+                }
+
+                var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+                var pieData        = invoicesBySupplier;
+                var pieOptions     = {
+                    maintainAspectRatio : false,
+                    responsive : true,
+                }
+                //Create pie or douhnut chart
+                // You can switch between pie and douhnut using the method below.
+                new Chart(pieChartCanvas, {
+                    type: 'pie',
+                    data: pieData,
+                    options: pieOptions
+                })
+            }
+
+            function dynamicColors() {
+                var r = Math.floor(Math.random() * 255);
+                var g = Math.floor(Math.random() * 255);
+                var b = Math.floor(Math.random() * 255);
+                return "rgb(" + r + "," + g + "," + b + ")";
+            };
+        </script>
+
+    </th:block>
 
 </html>
