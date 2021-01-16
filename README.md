@@ -9,7 +9,7 @@ The main features of the application are:
 - Dashboard with useful info
 - Management of Products/Services
 - Management of Customers/Suppliers
-- Issue an Invoice and send it to myDATA
+- Issue an Invoice and send it to MyDATA
 - Publicly accesible screen with qrcode to view invoice
 - Add a received invoice
 - Configure invoice parameters, company and system
