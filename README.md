@@ -46,9 +46,12 @@ docker run --name CONTAINER_NAME -p 8480:8080 \
 ```
 
 ## Contribute
-You can fork the project and start working with any open issue which is available here [Simplinvoice Open Issues](https://gitlab.com/mst-thesis/simplinvoice/-/issues)  
+You can fork the project and start working with any open issue which is available here [Simplinvoice Open Issues](https://github.com/johnmara/simplinvoice/issues)  
 Once you are done with your implementation you can submit a **Merge Request**.
 
 ### Development
 This is a maven project and you can import it in any Java IDE.  
 A Relational Database (MySQL is suggested) is required in order to run the application.
+
+### License
+The project is protected under Apache License 2.0
