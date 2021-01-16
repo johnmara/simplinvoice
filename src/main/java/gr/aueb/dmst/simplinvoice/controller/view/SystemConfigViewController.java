@@ -30,7 +30,7 @@ public class SystemConfigViewController extends AbstractViewController {
 
     @GetMapping("/retrieve")
     public String showSystemConfigForm(WebRequest request, Model model) {
-        Long companyProfileId = Utils.getUserFromWebRequest(request).getCompanyProfile().getId();
+        Long companyProfileId = retrieveCompanyProfileId(Utils.getUserFromWebRequest(request));
 
         SystemConfig systemConfig = systemConfigService.getSystemConfigByCompanyProfileId(companyProfileId);
         if (systemConfig == null) {

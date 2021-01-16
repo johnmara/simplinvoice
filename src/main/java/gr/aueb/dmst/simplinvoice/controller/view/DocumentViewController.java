@@ -48,7 +48,7 @@ public class DocumentViewController extends AbstractViewController {
 
     @GetMapping(value = "/list")
     String getTradersList(@RequestParam(value = "type") DocumentType documentType, WebRequest request, final Model model) {
-        Long companyProfileId = Utils.getUserFromWebRequest(request).getCompanyProfile().getId();
+        Long companyProfileId = retrieveCompanyProfileId(Utils.getUserFromWebRequest(request));
 
         model.addAttribute("type", documentType);
         model.addAttribute("documentsList", documentService.getDocumentsList(documentType, companyProfileId));
@@ -58,7 +58,7 @@ public class DocumentViewController extends AbstractViewController {
 
     @GetMapping(value = {"/issue/", "/issue/{id}"})
     String getDocumentIssued(@PathVariable(required = false) Long id, WebRequest request, final Model model) {
-        Long companyProfileId = Utils.getUserFromWebRequest(request).getCompanyProfile().getId();
+        Long companyProfileId = retrieveCompanyProfileId(Utils.getUserFromWebRequest(request));
 
         DocumentHeader documentHeader;
 
@@ -88,7 +88,7 @@ public class DocumentViewController extends AbstractViewController {
 
     @GetMapping(value = {"/receive/", "/receive/{id}"})
     String getDocumentReceive(@PathVariable(required = false) Long id, WebRequest request, final Model model) {
-        Long companyProfileId = Utils.getUserFromWebRequest(request).getCompanyProfile().getId();
+        Long companyProfileId = retrieveCompanyProfileId(Utils.getUserFromWebRequest(request));
 
         DocumentHeader documentHeader;
 
@@ -118,7 +118,7 @@ public class DocumentViewController extends AbstractViewController {
 
     @GetMapping(value = "/summary/{id}")
     String getDocumentSummary(@PathVariable Long id, WebRequest request, final Model model) {
-        Long companyProfileId = Utils.getUserFromWebRequest(request).getCompanyProfile().getId();
+        Long companyProfileId = retrieveCompanyProfileId(Utils.getUserFromWebRequest(request));
 
         DocumentHeader documentHeader = documentService.getDocumentHeaderById(id, companyProfileId);
 
@@ -141,9 +141,9 @@ public class DocumentViewController extends AbstractViewController {
     @GetMapping(value = "/download/mydata/xml/{id}")
     public ResponseEntity<byte[]> downloadMydataXml(@PathVariable Long id, HttpServletRequest request) {
 
-        CompanyProfile companyProfile = Utils.getUserFromHttpServletRequest(request).getCompanyProfile();
+        Long companyProfileId = retrieveCompanyProfileId(Utils.getUserFromHttpServletRequest(request));
 
-        DocumentHeader documentHeader = documentService.getDocumentHeaderById(id, companyProfile.getId());
+        DocumentHeader documentHeader = documentService.getDocumentHeaderById(id, companyProfileId);
         String text = documentHeader.getMydataXml();
 
         byte[] contents = text.getBytes();
@@ -159,11 +159,9 @@ public class DocumentViewController extends AbstractViewController {
 
     @PostMapping(value = "/forward/unsent/mydata")
     ResponseEntity forwardUnsentToMydata(HttpServletRequest request) {
+        Long companyProfileId = retrieveCompanyProfileId(Utils.getUserFromHttpServletRequest(request));
 
-        CompanyProfile companyProfile = Utils.getUserFromHttpServletRequest(request).getCompanyProfile();
-
-        documentService.forwardUnsentToMydata(companyProfile.getId());
-
+        documentService.forwardUnsentToMydata(companyProfileId);
 
         return ResponseEntity.noContent().build();
     }
@@ -202,7 +200,7 @@ public class DocumentViewController extends AbstractViewController {
 
     @PostMapping(params = {"addItem", "documentType"}, path = {"/item", "/item/{id}"})
     public String addDocumentItem(DocumentHeader documentHeader, @RequestParam("documentType") DocumentType documentType, HttpServletRequest request, Model model) {
-        Long companyProfileId = Utils.getUserFromHttpServletRequest(request).getCompanyProfile().getId();
+        Long companyProfileId = retrieveCompanyProfileId(Utils.getUserFromHttpServletRequest(request));
         List<Material> materialsList = materialService.getMaterialsList(companyProfileId);
         model.addAttribute("materialsList", materialsList);
 
@@ -213,7 +211,7 @@ public class DocumentViewController extends AbstractViewController {
     @PostMapping(params = {"removeItem", "documentType"}, path = {"/item", "/item/{id}"})
     public String removeDocumentItem(DocumentHeader documentHeader, @RequestParam("removeItem") int index,
                                      @RequestParam("documentType") DocumentType documentType, HttpServletRequest request, Model model) {
-        Long companyProfileId = Utils.getUserFromHttpServletRequest(request).getCompanyProfile().getId();
+        Long companyProfileId = retrieveCompanyProfileId(Utils.getUserFromHttpServletRequest(request));
         List<Material> materialsList = materialService.getMaterialsList(companyProfileId);
         model.addAttribute("materialsList", materialsList);
 
