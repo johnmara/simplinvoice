@@ -10,6 +10,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.IOException;
@@ -46,7 +47,7 @@ public class XmlUtils {
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema validationSchema = sf.newSchema(new ClassPathResource(myDataDoc.xsdPath).getFile());
+        Schema validationSchema = sf.newSchema(XmlUtils.class.getClassLoader().getResource(myDataDoc.xsdPath));
         jaxbUnmarshaller.setSchema(validationSchema);
 
         try {
