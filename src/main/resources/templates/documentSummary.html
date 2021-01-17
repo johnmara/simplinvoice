@@ -40,7 +40,7 @@
                         <!-- this row will not appear when printing -->
                         <div class="row no-print">
                             <div class="col-12">
-                                <a th:if="${isIssued}" th:href="@{/document/issue/summary/public/__${documentHeader.authenticationCode}__}" rel="noopener" target="_blank" class="btn btn-default" th:inline="text">
+                                <a th:if="${isIssued && documentHeader.authenticationCode != null}" th:href="@{/document/issue/summary/public/__${documentHeader.authenticationCode}__}" rel="noopener" target="_blank" class="btn btn-default" th:inline="text">
                                     <i class="fas fa-eye"></i> [[#{document.summary.view.public}]]
                                 </a>
                                 <button type="button" id="pdfBtn" class="btn btn-primary float-right" th:inline="text">
