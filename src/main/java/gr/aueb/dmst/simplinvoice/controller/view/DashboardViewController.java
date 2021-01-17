@@ -17,7 +17,7 @@ public class DashboardViewController extends AbstractViewController {
 
     @GetMapping(value = {"/", "/dashboard"})
     String getDashboardView(HttpServletRequest request, final Model model) {
-        Long companyProfileId = Utils.getUserFromHttpServletRequest(request).getCompanyProfile().getId();
+        Long companyProfileId = retrieveCompanyProfileId(Utils.getUserFromHttpServletRequest(request));
 
         model.addAttribute("totalRevenue", dashboardService.calculateTotalRevenue(companyProfileId));
         model.addAttribute("totalExpenses", dashboardService.calculateTotalExpenses(companyProfileId));

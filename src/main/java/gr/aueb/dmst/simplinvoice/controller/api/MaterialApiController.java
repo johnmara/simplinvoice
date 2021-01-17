@@ -2,9 +2,7 @@ package gr.aueb.dmst.simplinvoice.controller.api;
 
 import gr.aueb.dmst.simplinvoice.Utils;
 import gr.aueb.dmst.simplinvoice.model.Material;
-import gr.aueb.dmst.simplinvoice.model.Trader;
 import gr.aueb.dmst.simplinvoice.service.MaterialService;
-import gr.aueb.dmst.simplinvoice.service.TraderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

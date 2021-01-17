@@ -1,6 +1,5 @@
 package gr.aueb.dmst.simplinvoice.controller.view;
 
-import gr.aueb.dmst.simplinvoice.Constants;
 import gr.aueb.dmst.simplinvoice.Utils;
 import gr.aueb.dmst.simplinvoice.enums.TraderType;
 import gr.aueb.dmst.simplinvoice.model.Trader;
@@ -30,7 +29,7 @@ public class TraderViewController extends AbstractViewController {
 
     @GetMapping(value = "/list")
     String getTradersList(@RequestParam(value = "type") TraderType traderType, WebRequest request, final Model model) {
-        Long companyProfileId = Utils.getUserFromWebRequest(request).getCompanyProfile().getId();
+        Long companyProfileId = retrieveCompanyProfileId(Utils.getUserFromWebRequest(request));
 
         model.addAttribute("type", traderType);
         model.addAttribute("tradersList", traderService.getTradersList(traderType, companyProfileId));
@@ -40,7 +39,7 @@ public class TraderViewController extends AbstractViewController {
 
     @GetMapping(value = {"/", "/{id}"})
     String getTrader(@PathVariable(required = false) Long id, @RequestParam(value = "type", required = false) TraderType traderType, WebRequest request, final Model model) {
-        Long companyProfileId = Utils.getUserFromWebRequest(request).getCompanyProfile().getId();
+        Long companyProfileId = retrieveCompanyProfileId(Utils.getUserFromWebRequest(request));
 
         Trader trader;
 
@@ -59,7 +58,7 @@ public class TraderViewController extends AbstractViewController {
 
     @DeleteMapping(value = "/delete/{id}")
     String deleteTrader(@PathVariable Long id, WebRequest request, final Model model, RedirectAttributes redirectAttributes) {
-        Long companyProfileId = Utils.getUserFromWebRequest(request).getCompanyProfile().getId();
+        Long companyProfileId = retrieveCompanyProfileId(Utils.getUserFromWebRequest(request));
 
         Trader trader = traderService.getTraderById(id, companyProfileId);
         traderService.deleteTrader(id, companyProfileId);

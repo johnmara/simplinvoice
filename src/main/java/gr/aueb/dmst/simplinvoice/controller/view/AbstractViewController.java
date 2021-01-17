@@ -1,5 +1,7 @@
 package gr.aueb.dmst.simplinvoice.controller.view;
 
+import gr.aueb.dmst.simplinvoice.exception.CompanyProfileNotFoundException;
+import gr.aueb.dmst.simplinvoice.model.User;
 import gr.aueb.dmst.simplinvoice.model.request.PageListRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -7,6 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -69,6 +74,19 @@ public abstract class AbstractViewController {
                     .collect(Collectors.toList());
             model.addAttribute("pageNumbers", pageNumbers);
         }
+    }
+
+    Long retrieveCompanyProfileId(User user) throws CompanyProfileNotFoundException {
+        if(user == null || user.getCompanyProfile() == null)
+            throw new CompanyProfileNotFoundException("Company profile not found");
+
+        return user.getCompanyProfile().getId();
+    }
+
+    @ExceptionHandler(CompanyProfileNotFoundException.class)
+    public ModelAndView handleCompanyProfileNotFoundException(
+            Exception ex, WebRequest request) {
+        return new ModelAndView("redirect:/company/profile/retrieve");
     }
 
 }

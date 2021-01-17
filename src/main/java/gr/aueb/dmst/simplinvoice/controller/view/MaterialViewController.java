@@ -28,7 +28,7 @@ public class MaterialViewController extends AbstractViewController {
 
     @GetMapping(value = "/list")
     String getMaterialsList(WebRequest request, final Model model) {
-        Long companyProfileId = Utils.getUserFromWebRequest(request).getCompanyProfile().getId();
+        Long companyProfileId = retrieveCompanyProfileId(Utils.getUserFromWebRequest(request));
 
         model.addAttribute("materialsList", materialService.getMaterialsList(companyProfileId));
 
@@ -37,7 +37,7 @@ public class MaterialViewController extends AbstractViewController {
 
     @GetMapping(value = {"/", "/{id}"})
     String getMaterials(@PathVariable(required = false) Long id, WebRequest request, final Model model) {
-        Long companyProfileId = Utils.getUserFromWebRequest(request).getCompanyProfile().getId();
+        Long companyProfileId = retrieveCompanyProfileId(Utils.getUserFromWebRequest(request));
 
         Material material;
 
@@ -54,7 +54,7 @@ public class MaterialViewController extends AbstractViewController {
 
     @DeleteMapping(value = "/delete/{id}")
     String deleteMaterial(@PathVariable Long id, WebRequest request, final Model model, RedirectAttributes redirectAttributes) {
-        Long companyProfileId = Utils.getUserFromWebRequest(request).getCompanyProfile().getId();
+        Long companyProfileId = retrieveCompanyProfileId(Utils.getUserFromWebRequest(request));
 
         materialService.deleteMaterial(id, companyProfileId);
         return addSuccessMessageAndRedirect("/material/list", messageSource.getMessage("material.deleted.success", null, request.getLocale()), redirectAttributes);

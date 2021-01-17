@@ -33,13 +33,13 @@ public class DashboardService {
     public BigDecimal calculateTotalRevenue(Long companyProfileId) {
         DocumentHeaderTotal documentHeaderTotal = documentHeaderRepository.getDocumentTotalValue(DEFAULT_LAST_MONTHS, DocumentType.ISSUED.name(), companyProfileId);
 
-        return documentHeaderTotal.getSum();
+        return documentHeaderTotal != null ? documentHeaderTotal.getSum() : BigDecimal.ZERO;
     }
 
     public BigDecimal calculateTotalExpenses(Long companyProfileId) {
         DocumentHeaderTotal documentHeaderTotal = documentHeaderRepository.getDocumentTotalValue(DEFAULT_LAST_MONTHS, DocumentType.RECEIVED.name(), companyProfileId);
 
-        return documentHeaderTotal.getSum();
+        return documentHeaderTotal != null ? documentHeaderTotal.getSum() : BigDecimal.ZERO;
     }
 
     public Map<String, BigDecimal> constructRevenueByMonthData(Long companyProfileId, Locale locale) {

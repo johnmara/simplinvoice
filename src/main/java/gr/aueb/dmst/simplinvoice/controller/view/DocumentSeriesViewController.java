@@ -28,7 +28,7 @@ public class DocumentSeriesViewController extends AbstractViewController {
 
     @GetMapping(value = "/list")
     String getDocumentSeriesList(WebRequest request, final Model model) {
-        Long companyProfileId = Utils.getUserFromWebRequest(request).getCompanyProfile().getId();
+        Long companyProfileId = retrieveCompanyProfileId(Utils.getUserFromWebRequest(request));
 
         model.addAttribute("documentSeriesList", documentSeriesService.getDocumentSeriesList(companyProfileId));
 
@@ -37,7 +37,7 @@ public class DocumentSeriesViewController extends AbstractViewController {
 
     @GetMapping(value = {"/", "/{id}"})
     String getDocumentSeries(@PathVariable(required = false) Long id, WebRequest request, final Model model) {
-        Long companyProfileId = Utils.getUserFromWebRequest(request).getCompanyProfile().getId();
+        Long companyProfileId = retrieveCompanyProfileId(Utils.getUserFromWebRequest(request));
 
         DocumentSeries documentSeries;
 
@@ -54,7 +54,7 @@ public class DocumentSeriesViewController extends AbstractViewController {
 
     @DeleteMapping(value = "/delete/{id}")
     String deleteDocumentSeries(@PathVariable Long id, WebRequest request, final Model model, RedirectAttributes redirectAttributes) {
-        Long companyProfileId = Utils.getUserFromWebRequest(request).getCompanyProfile().getId();
+        Long companyProfileId = retrieveCompanyProfileId(Utils.getUserFromWebRequest(request));
 
         documentSeriesService.deleteDocumentSeries(id, companyProfileId);
         return addSuccessMessageAndRedirect("/document/series/list", messageSource.getMessage("document.series.deleted.success", null, request.getLocale()), redirectAttributes);
