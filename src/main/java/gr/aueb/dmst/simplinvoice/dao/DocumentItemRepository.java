@@ -12,7 +12,7 @@ public interface DocumentItemRepository extends JpaRepository<DocumentItem, Long
 
     public void deleteAllByDocumentHeader(DocumentHeader documentHeader);
 
-    @Query(value = "SELECT material.description as name, COUNT(item.material_id) as total " +
+    @Query(value = "SELECT material.description as name, SUM(item.quantity) as total " +
             "FROM document_item as item INNER JOIN document_header as doc ON (item.document_header_id = doc.id) " +
             "INNER JOIN material ON (item.material_id = material.id) " +
             "WHERE doc.date > now() - INTERVAL ?1 month AND doc.type = ?2 AND doc.company_profile_id = ?3 " +
