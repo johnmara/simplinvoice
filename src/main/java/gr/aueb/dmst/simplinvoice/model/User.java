@@ -29,7 +29,6 @@ public class User {
 
     public User() {
         super();
-        this.enabled = false;
     }
 
     public Long getId() {

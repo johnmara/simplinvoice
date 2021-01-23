@@ -7,6 +7,7 @@ import gr.aueb.dmst.simplinvoice.model.User;
 import gr.aueb.dmst.simplinvoice.model.UserRole;
 import gr.aueb.dmst.simplinvoice.validator.EmailExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,9 @@ public class UserService {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Value("${new.user.enabled}")
+    boolean newUserEnabled;
+
     @Transactional
     public User registerNewUserAccount(UserDto userDto)
             throws EmailExistsException {
@@ -41,6 +45,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setEmail(userDto.getEmail());
         user.setRoles(Arrays.asList(roleRepository.findByName(UserRole.COMPANY.name())));
+        user.setEnabled(newUserEnabled);
 
         return userRepository.save(user);
     }
